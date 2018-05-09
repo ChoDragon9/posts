@@ -1,3 +1,4 @@
+// filter, map
 const filter = (list, predicate) => list.filter(predicate)
 const map = (list, iteratee) => list.map(iteratee)
 
@@ -12,6 +13,7 @@ map(
   item => user.age
 )
 
+// bvalue
 const bvalue = key => obj => obj[key]
 
 bvalue('a')({a: 'hi'})
@@ -23,3 +25,12 @@ map(
   filter(list, item => item.age > 10),
   bvalue('age')
 )
+
+// bvalues
+const bvalues = key => list => map(list, v => v[key])
+
+const ages = bvalues('age')
+const under30 = u => u.age < 30
+
+ages(filter(users, under30))
+
