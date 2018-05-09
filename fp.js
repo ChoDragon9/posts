@@ -34,3 +34,9 @@ const under30 = u => u.age < 30
 
 ages(filter(users, under30))
 
+// findBy
+const find = (list, predicate) => {
+  for (let item of list) {
+    if (predicate(item)) return item
+  }
+}
