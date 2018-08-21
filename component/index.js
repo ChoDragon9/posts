@@ -1,6 +1,3 @@
-import {getElem} from './helper'
-import TodoList from './TodoList'
+import createApp from './createApp'
 
-const todoList = new TodoList().render()
-
-getElem('#container').appendChild(todoList)
+createApp()

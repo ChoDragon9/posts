@@ -1,26 +1,51 @@
-import {parseHTML} from './helper'
+import {parseHTML, bindEvent} from './helper'
 
-class TodoItem {
-  constructor (state) {
-    this._dom = null
-    this._state = state
-  }
-  get template () {
-    let list = ''
+export const createTodoItem = ({store}) => {
+  let dom = null
+  const template = () => {
+    const todo = store.get('todo')
+    const items = todo.reduce((result, {id, contents}) => {
+      return `${result}<li data-id="${id}">
+        ${contents} <button type="button">X</button>
+      </li>`
+    }, '')
+    let list
 
-    if (this._state) {
-      const items = this._state.reduce((result, txt) => {
-        return `${result}<li>${txt}</li>`
-      }, '')
+    if (items) {
       list = `<ul>${items}</ul>`
+    } else {
+      list = 'No Items'
     }
-
     return `<div>${list}</div>`
   }
-  render () {
-    this._dom = parseHTML(this.template)
-    return this._dom
+  const mount = () => {
+    dom = methods.createNewDom()
+    store.subscribe('todo', () => {
+      methods.render()
+    })
+    return dom
   }
-}
+  const methods = {
+    render () {
+      const newDom = this.createNewDom()
+      dom.replaceWith(newDom)
+      dom = newDom
+    },
+    createNewDom () {
+      const dom = parseHTML(template())
+      bindEvent(events, methods, dom)
+      return dom
+    },
+    removeItem () {
+      const id = this.parentNode.getAttribute('data-id')
+      const todo = store.get('todo')
+        .filter((item) => item.id.toString() !== id)
+      store.set('todo', todo)
+    }
+  }
+  const events = [
+    ['li > button', 'onclick', 'removeItem']
+  ]
 
-export default TodoItem
+  return mount()
+}
