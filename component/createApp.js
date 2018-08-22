@@ -1,7 +1,7 @@
-import {getElem} from './helper'
+import {bindComponent, getElem, parseHTML} from './helper'
 import {createTodoList} from './TodoList'
 
-export default () => {
+const createApp = () => {
   const initState = {
     todo: [
       { id: 0, contents: 'asdasdad' },
@@ -9,6 +9,23 @@ export default () => {
       { id: 2, contents: 'asdasdad' }
     ]
   }
-  const todoList = createTodoList({initState})
-  getElem('#container')[0].appendChild(todoList)
+  const template = () => `<div>
+    <todo-list></todo-list>
+  </div>`
+  const components = () => {
+    return [
+      ['todo-list', createTodoList, {initState}]
+    ]
+  }
+  const mount = () => {
+    const dom = parseHTML(template())
+    bindComponent(components(), dom)
+    return dom
+  }
+
+  return mount()
+}
+
+export default () => {
+  getElem('#container')[0].appendChild(createApp())
 }

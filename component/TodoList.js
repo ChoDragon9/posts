@@ -4,6 +4,7 @@ import {createTodoItem} from './TodoItem'
 export const createTodoList = ({initState}) => {
   let dom = null
   const store = createStore()
+  // User
   const template = () => {
     return `<div>
       <form>
@@ -15,13 +16,6 @@ export const createTodoList = ({initState}) => {
       -------
       <todo-item></todo-item>
     </div>`
-  }
-  const mount = () => {
-    store.set('todo', initState.todo)
-    dom = parseHTML(template())
-    bindEvent(events, methods, dom)
-    bindComponent(components(), dom)
-    return dom
   }
   const methods = {
     addItem (event) {
@@ -38,14 +32,23 @@ export const createTodoList = ({initState}) => {
       input.value = ''
     }
   }
-  const events = [
-    ['form', 'onsubmit', 'addItem']
-  ]
   const components = () => {
     return [
       ['todo-item', createTodoItem, {store}]
     ]
   }
+  // Framework
+  const mount = () => {
+    store.set('todo', initState.todo)
+    dom = parseHTML(template())
+    bindEvent(events, methods, dom)
+    bindComponent(components(), dom)
+    return dom
+  }
+  // Directive
+  const events = [
+    ['form', 'onsubmit', 'addItem']
+  ]
 
   return mount()
 }

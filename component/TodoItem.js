@@ -2,6 +2,7 @@ import {parseHTML, bindEvent} from './helper'
 
 export const createTodoItem = ({store}) => {
   let dom = null
+  // User
   const template = () => {
     const todo = store.get('todo')
     const items = todo.reduce((result, {id, contents}) => {
@@ -17,13 +18,6 @@ export const createTodoItem = ({store}) => {
       list = 'No Items'
     }
     return `<div>${list}</div>`
-  }
-  const mount = () => {
-    dom = methods.createNewDom()
-    store.subscribe('todo', () => {
-      methods.render()
-    })
-    return dom
   }
   const methods = {
     render () {
@@ -43,6 +37,15 @@ export const createTodoItem = ({store}) => {
       store.set('todo', todo)
     }
   }
+  // Framework
+  const mount = () => {
+    dom = methods.createNewDom()
+    store.subscribe('todo', () => {
+      methods.render()
+    })
+    return dom
+  }
+  // Directive
   const events = [
     ['li > button', 'onclick', 'removeItem']
   ]
