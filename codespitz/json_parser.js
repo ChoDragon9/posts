@@ -8,8 +8,9 @@
 const parser = input => {
   input = input.trim()
   const result = {}
+  const j = input.length - 1
   let curr = {val: result, key: null, back: null}
-  let i = 0, j = input.length
+  let i = 1
   while (i < j) {
     const cursor = i
     if (isString(input[cursor])) {
