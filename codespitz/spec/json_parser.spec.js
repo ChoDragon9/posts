@@ -62,4 +62,26 @@ describe('json_parser', () => {
       key2: 12345
     })
   })
+  it('parser - All Type', () => {
+    // Given
+    const html = '{"key1": "value1", "key2": "value2", "obj": {"key1": {"key1_1":"value1_1"}, "key2": {"key2_1":"value2_1", "key2_2":"value2_2"}}}'
+
+    // When
+    const result = parser(html)
+
+    // Then
+    expect(result).toEqual({
+      key1: "value1",
+      key2: "value2",
+      obj: {
+        key1: {
+          key1_1: "value1_1"
+        },
+        key2: {
+          key2_1: "value2_1",
+          key2_2: "value2_2"
+        }
+      }
+    })
+  })
 })
