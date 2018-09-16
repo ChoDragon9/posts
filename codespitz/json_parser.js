@@ -99,11 +99,14 @@ const parseArray = (input, cursor, curr) => {
 
 const parseNumber = (input, cursor, curr, j) => {
   const commaIdx = input.indexOf(`,`, cursor + 1)
+  const arrIdx = input.indexOf(`]`, cursor + 1)
+  const objIdx = input.indexOf(`}`, cursor + 1)
   let idx = cursor
   let num
-  if (commaIdx > -1) {
-    num = input.substring(cursor, commaIdx)
-    idx = commaIdx + 1
+  const endCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(v => v > -1))
+  if (endCursor > -1) {
+    num = input.substring(cursor, endCursor)
+    idx = endCursor - 1
   } else {
     num = input.substring(cursor, j)
     idx = j
@@ -118,10 +121,10 @@ const parseBoolean = (input, cursor, curr) => {
   let val, idx
   if (input[cursor] === 't') {
     val = true
-    idx = cursor + 4
+    idx = cursor + 3
   } else {
     val = false
-    idx = cursor + 5
+    idx = cursor + 4
   }
   addValue(val, curr)
   return {idx}
@@ -129,7 +132,7 @@ const parseBoolean = (input, cursor, curr) => {
 
 const parseNull = (cursor, curr) => {
   const val = null
-  const idx = cursor + 4
+  const idx = cursor + 3
   addValue(val, curr)
   return {idx}
 }

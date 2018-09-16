@@ -4,7 +4,7 @@ const {parser} = require('../json_parser')
 describe('json_parser', () => {
   it('parser - String', () => {
     // Given
-    const html = '{"key1": "value1\\"", "key2": "value2"}'
+    const html = '{"key1": "value1", "key2": "value2"}'
 
     // When
     const result = parser(html)
@@ -52,20 +52,38 @@ describe('json_parser', () => {
 
   it('parser - Array', () => {
     // Given
-    const html = '{"key": ["value", 123, {"key": "value"}, [123]}'
+    const html = `{
+      "key1": ["value", 123, {"key": "value"}, [123], true, false, null],
+      "key2": [[[[1]]]],
+      "key3": [
+        ["value"], [123], [{"key": "value"}], [[123]],
+        [true], [false], [null]
+      ]
+    }`
 
     // When
     const result = parser(html)
 
     // Then
     expect(result).toEqual({
-      key: [
+      key1: [
         "value",
         123,
-        {
-          key: "value"
-        },
-        [123]
+        {key: "value"},
+        [123],
+        true,
+        false,
+        null
+      ],
+      key2: [[[[1]]]],
+      key3: [
+        ["value"],
+        [123],
+        [{key: "value"}],
+        [[123]],
+        [true],
+        [false],
+        [null]
       ]
     })
   })
