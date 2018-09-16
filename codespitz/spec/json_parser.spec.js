@@ -64,7 +64,16 @@ describe('json_parser', () => {
   })
   it('parser - All Type', () => {
     // Given
-    const html = '{"key1": "value1", "key2": "value2", "obj": {"key1": {"key1_1":"value1_1"}, "key2": {"key2_1":"value2_1", "key2_2":"value2_2"}}}'
+    const html = `{
+      "key1": "value1",
+      "key2": "value2",
+      "obj": {
+        "key1": {"key1_1":"value1_1"},
+        "key2": {"key2_1":"value2_1", "key2_2":"value2_2"}
+      },
+      "arr": ["value2_1", "value2_2"],
+      "num": {"key0": 0, "key1": -1, "key2", 12345}
+    }`
 
     // When
     const result = parser(html)
@@ -81,6 +90,12 @@ describe('json_parser', () => {
           key2_1: "value2_1",
           key2_2: "value2_2"
         }
+      },
+      arr: ["value2_1", "value2_2"],
+      num: {
+        key0: 0,
+        key1: -1,
+        key2: 12345
       }
     })
   })

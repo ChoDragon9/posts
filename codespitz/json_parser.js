@@ -14,7 +14,7 @@ const json = {
 const parser = input => {
   input = input.trim()
   const result = {}
-  let curr = result
+  let curr = {val: result, back: null}
   let i = 1, j = input.length - 1
   let key
   let back
@@ -23,11 +23,11 @@ const parser = input => {
     if (input[cursor] === `"`) {
       const idx = input.indexOf(`"`, cursor + 1)
       const str = input.substring(cursor + 1, idx)
-      if (Array.isArray(curr)) {
-        curr.push(str)
+      if (Array.isArray(curr.val)) {
+        curr.val.push(str)
       } else {
         if (key) {
-          curr[key] = str
+          curr.val[key] = str
           key = null
         } else {
           key = str
@@ -37,23 +37,27 @@ const parser = input => {
     } else {
       let idx = cursor
       if (input[cursor] === `}`) {
-        curr = back
+        curr = curr.back
         key = null
       } else if (input[cursor] === `{`) {
         const newVal = {}
-        curr[key] = newVal
+        curr.val[key] = newVal
         key = null
-        back = curr
-        curr = newVal
+        curr = {
+          back: curr,
+          val: newVal
+        }
       } else if (input[cursor] === `]`) {
-        curr = back
+        curr = curr.back
         key = null
       } else if (input[cursor] === `[`) {
         const newVal = []
-        curr[key] = newVal
+        curr.val[key] = newVal
         key = null
-        back = curr
-        curr = newVal
+        curr = {
+          back: curr,
+          val: newVal
+        }
       } else {
         if (input[cursor] === '-' || parseInt(input[cursor]) > -1) {
           const commaIdx = input.indexOf(`,`, cursor + 1)
@@ -65,7 +69,7 @@ const parser = input => {
             num = parseInt(input.substring(cursor, j).trim())
             idx = j
           }
-          curr[key] = num
+          curr.val[key] = num
           key = null
         }
       }
