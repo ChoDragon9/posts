@@ -35,17 +35,14 @@ describe('json_parser', () => {
   })
   it('parser - Array', () => {
     // Given
-    const html = '{"key1": {"key1_1":"value1_1"}, "key2": ["value2_1", "value2_2"]}'
+    const html = '{"key": ["value", 123, {"key":"value"}, ["value"]]}'
 
     // When
     const result = parser(html)
 
     // Then
     expect(result).toEqual({
-      key1: {
-        key1_1: "value1_1"
-      },
-      key2: ["value2_1", "value2_2"]
+      key: ["value", 123, {"key": "value"}, ["value"]]
     })
   })
   it('parser - Number', () => {

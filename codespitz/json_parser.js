@@ -1,9 +1,9 @@
 /**
- * JSON {KEY: VALUE}
- * KEY: String, Number
- * VALUE: String, Number, Object, Array
- * Object: {KEY: VALUE}
- * Array: [VALUE[, ...VALUE]]
+ * @see https://www.json.org/
+ * Value: String, Number, Object, Array,
+ *        true, false, null
+ * Object: {String: Value}
+ * Array: [Value[, ...Value]]
  */
 const json = {
   "key": "value",
