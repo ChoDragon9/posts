@@ -4,7 +4,7 @@ const {parser} = require('../json_parser')
 describe('json_parser', () => {
   it('parser - String', () => {
     // Given
-    const html = '{"key1": "value1", "key2": "value2"}'
+    const html = '{"key1": "value1\\"", "key2": "value2"}'
 
     // When
     const result = parser(html)
