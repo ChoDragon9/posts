@@ -5,13 +5,6 @@
  * Object: {String: Value}
  * Array: [Value[, ...Value]]
  */
-const isString = v => v === `"`
-const isObject = v => v === `{` || v === `}`
-const isArray = v => v === `[` || v === `]`
-const isNumber = v => v === '-' || parseInt(v) > -1
-const isBoolean = v => v === 't' || v === 'f'
-const isNull = v => v === 'n'
-
 const parser = input => {
   input = input.trim()
   const result = {}
@@ -19,10 +12,7 @@ const parser = input => {
   let i = 1, j = input.length - 1
   while (i < j) {
     const cursor = i
-    if (isString(input[cursor])) {
-      const {idx} = parseString(input, cursor, curr)
-      i = idx + 1
-    } else if (isObject(input[cursor])) {
+    if (isObject(input[cursor])) {
       const {idx, newCurr} = parseObject(input, cursor, curr)
       curr = newCurr
       i = idx + 1
@@ -38,6 +28,9 @@ const parser = input => {
       i = idx + 1
     } else if (isNull(input[cursor])) {
       const {idx} = parseNull(cursor, curr)
+      i = idx + 1
+    } else if (isString(input[cursor])) {
+      const {idx} = parseString(input, cursor, curr)
       i = idx + 1
     } else {
       i++
@@ -61,6 +54,13 @@ const addValue = ( value, curr) => {
   }
   curr.key = newKey
 }
+
+const isString = v => v === `"`
+const isObject = v => v === `{` || v === `}`
+const isArray = v => v === `[` || v === `]`
+const isNumber = v => v === '-' || parseInt(v) > -1
+const isBoolean = v => v === 't' || v === 'f'
+const isNull = v => v === 'n'
 
 const parseString = (input, cursor, curr) => {
   const idx = input.indexOf(`"`, cursor + 1)
