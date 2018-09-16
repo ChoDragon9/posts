@@ -12,15 +12,10 @@ const parser = input => {
   let i = 1, j = input.length - 1
   while (i < j) {
     const cursor = i
-    if (isObject(input[cursor])) {
-      const {idx, newCurr} = parseObject(input, cursor, curr)
-      curr = newCurr
+    if (isString(input[cursor])) {
+      const {idx} = parseString(input, cursor, curr)
       i = idx + 1
-    } else if (isArray(input[cursor])) {
-      const {idx, newCurr} = parseArray(input, cursor, curr)
-      curr = newCurr
-      i = idx + 1
-    } else if (isNumber(input[cursor])){
+    } else  if (isNumber(input[cursor])){
       const {idx} = parseNumber(input, cursor, curr, j)
       i = idx + 1
     } else if (isBoolean(input[cursor])) {
@@ -29,30 +24,32 @@ const parser = input => {
     } else if (isNull(input[cursor])) {
       const {idx} = parseNull(cursor, curr)
       i = idx + 1
-    } else if (isString(input[cursor])) {
-      const {idx} = parseString(input, cursor, curr)
-      i = idx + 1
     } else {
+      if (isObject(input[cursor])) {
+        const {newCurr} = parseObject(input, cursor, curr)
+        curr = newCurr
+      } else if (isArray(input[cursor])) {
+        const {newCurr} = parseArray(input, cursor, curr)
+        curr = newCurr
+      }
       i++
     }
   }
   return result
 }
 
-const addValue = ( value, curr) => {
-  let key = curr.key
-  let newKey = key
-  if (Array.isArray(curr.val)) {
-    curr.val.push(value)
+const addValue = (value, curr) => {
+  const {key, val} = curr
+  if (Array.isArray(val)) {
+    val.push(value)
   } else {
     if (key) {
-      curr.val[key] = value
-      newKey = null
+      val[key] = value
+      curr.key = null
     } else {
-      newKey = value
+      curr.key = value
     }
   }
-  curr.key = newKey
 }
 
 const isString = v => v === `"`
@@ -81,7 +78,7 @@ const parseObject = (input, cursor, curr) => {
   } else {
     newCurr = curr.back
   }
-  return {idx: cursor, newCurr}
+  return {newCurr}
 }
 
 const parseArray = (input, cursor, curr) => {
@@ -96,12 +93,12 @@ const parseArray = (input, cursor, curr) => {
   } else {
     newCurr = curr.back
   }
-  return {idx: cursor, newCurr}
+  return {newCurr}
 }
 
 const parseNumber = (input, cursor, curr, j) => {
-  let idx = cursor
   const commaIdx = input.indexOf(`,`, cursor + 1)
+  let idx = cursor
   let num
   if (commaIdx > -1) {
     num = input.substring(cursor, commaIdx)
