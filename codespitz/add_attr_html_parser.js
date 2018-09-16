@@ -36,7 +36,7 @@ const elementNode = (input, cursor, idx, curr) => {
     name = input.substring(cursor + 1, idx - 1)
   } else {
     name = input.substring(cursor + 1, idx).trim()
-    const whitespaceIdx = name.trim().indexOf(' ')
+    const whitespaceIdx = name.indexOf(' ')
     if (whitespaceIdx > -1) {
       attr = parseAttr(name.substring(whitespaceIdx + 1))
       name = name.substring(0, whitespaceIdx)
