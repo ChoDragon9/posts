@@ -4,9 +4,11 @@
   "dependencies": {},
   "scripts": {
     "upload": "git add -A && git commit -m 'add' && git push origin master",
-    "download": "git pull origin master"
+    "download": "git pull origin master",
+    "test": "mocha ./spec/*.spec.js"
   },
   "devDependencies": {
-    "expect": "^23.6.0"
+    "expect": "^23.6.0",
+    "mocha": "^5.2.0"
   }
 }
