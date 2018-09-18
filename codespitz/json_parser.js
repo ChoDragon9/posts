@@ -1,5 +1,6 @@
 /**
  * @see https://www.json.org/
+ * @see http://seriot.ch/parsing_json.php#5
  * Value: String, Number, Object, Array,
  *        true, false, null
  * Object: {String: Value}
