@@ -8,9 +8,9 @@
  */
 const parser = input => {
   input = input.trim()
+  let i = 0
   const j = input.length
   let pointer = createNode({})
-  let i = 0
   while (i < j) {
     let cursor = i
     switch (true) {
@@ -33,24 +33,6 @@ const parser = input => {
     i = cursor + 1
   }
   return pointer.val
-}
-
-const addValue = (value, pointer) => {
-  const {key, val} = pointer
-  if (Array.isArray(val)) {
-    val.push(value)
-  } else {
-    if(val) {
-      if (key) {
-        val[key] = value
-        pointer.key = null
-      } else {
-        pointer.key = value
-      }
-    } else {
-      pointer.val = value
-    }
-  }
 }
 
 const createNode = ({val = null, key = null, back = null}) => ({val, key, back})
@@ -110,6 +92,24 @@ const parseNull = (cursor, pointer) => {
   const idx = cursor + 3
   addValue(val, pointer)
   return idx
+}
+
+const addValue = (value, pointer) => {
+  const {key, val} = pointer
+  if (Array.isArray(val)) {
+    val.push(value)
+  } else {
+    if(val) {
+      if (key) {
+        val[key] = value
+        pointer.key = null
+      } else {
+        pointer.key = value
+      }
+    } else {
+      pointer.val = value
+    }
+  }
 }
 
 module.exports = {
