@@ -7,10 +7,9 @@
  */
 const parser = input => {
   input = input.trim()
-  const result = {}
-  const j = input.length - 1
-  let curr = {val: result, key: null, back: null}
-  let i = 1
+  const j = input.length
+  let curr = {val: null, key: null, back: null}
+  let i = 0
   while (i < j) {
     const cursor = i
     if (isString(input[cursor])) {
@@ -36,20 +35,22 @@ const parser = input => {
       i++
     }
   }
-  return result
+  return curr.val
 }
 
 const addValue = (value, curr) => {
   const {key, val} = curr
   if (Array.isArray(val)) {
     val.push(value)
-  } else {
+  } else if(val) {
     if (key) {
       val[key] = value
       curr.key = null
     } else {
       curr.key = value
     }
+  } else {
+    curr.val = value
   }
 }
 
@@ -74,7 +75,8 @@ const parseObject = (input, cursor, curr) => {
     addValue(newVal, curr)
     newCurr = {
       val: newVal,
-      back: curr
+      back: curr,
+      key: null
     }
   } else {
     newCurr = curr.back
