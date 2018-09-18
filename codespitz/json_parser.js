@@ -39,15 +39,17 @@ const addValue = (value, pointer) => {
   const {key, val} = pointer
   if (Array.isArray(val)) {
     val.push(value)
-  } else if(val) {
-    if (key) {
-      val[key] = value
-      pointer.key = null
-    } else {
-      pointer.key = value
-    }
   } else {
-    pointer.val = value
+    if(val) {
+      if (key) {
+        val[key] = value
+        pointer.key = null
+      } else {
+        pointer.key = value
+      }
+    } else {
+      pointer.val = value
+    }
   }
 }
 
