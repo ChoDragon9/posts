@@ -58,7 +58,7 @@ const isString = v => v === `"`
 const isObject = v => v === `{` || v === `}`
 const isArray = v => v === `[` || v === `]`
 const isReference = v => isObject(v) || isArray(v)
-const isNumber = v => v === '-' || parseInt(v) > -1
+const isNumber = v => v === '-' || parseFloat(v) > -1
 const isBoolean = v => v === 't' || v === 'f'
 const isNull = v => v === 'n'
 
@@ -92,7 +92,7 @@ const parseNumber = (input, cursor, pointer) => {
   const objIdx = input.indexOf(`}`, cursor + 1)
   const endCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(v => v > -1))
   let num = input.substring(cursor, endCursor).trim()
-  num = parseInt(num)
+  num = parseFloat(num)
   addValue(num, pointer)
   return endCursor - 1
 }
