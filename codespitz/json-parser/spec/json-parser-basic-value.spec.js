@@ -1,5 +1,5 @@
 const expect = require('expect')
-const {parser} = require('../json_parser')
+const {parser} = require('../json-parser')
 
 describe('json_parser_basic_value', () => {
   it('parser - String', () => {

@@ -1,5 +1,5 @@
 const expect = require('expect')
-const {parser} = require('../remove_stack_html_parser')
+const {parser} = require('../remove-stack-html-parser')
 
 describe('remove_stack_html_parser', () => {
   it('parser', () => {

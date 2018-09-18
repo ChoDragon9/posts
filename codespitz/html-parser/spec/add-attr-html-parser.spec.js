@@ -1,5 +1,5 @@
 const expect = require('expect')
-const {parser} = require('../add_attr_html_parser')
+const {parser} = require('../add-attr-html-parser')
 
 describe('add_attr_html_parser', () => {
   it('parser', () => {

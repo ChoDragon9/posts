@@ -1,5 +1,5 @@
 const expect = require('expect')
-const {parser} = require('../html_parser')
+const {parser} = require('../html-parser')
 
 describe('html_parser', () => {
   it('parser', () => {
