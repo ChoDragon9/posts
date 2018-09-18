@@ -18,7 +18,7 @@ const parser = input => {
         cursor = parseString(input, cursor, curr)
         break;
       case isNumber(input[cursor]):
-        cursor = parseNumber(input, cursor, curr, j)
+        cursor = parseNumber(input, cursor, curr)
         break;
       case isBoolean(input[cursor]):
         cursor = parseBoolean(input, cursor, curr)
@@ -84,9 +84,9 @@ const parseString = (input, cursor, curr) => {
 const parseObject = (input, cursor, curr) => {
   let newCurr
   if (input[cursor] === `{`) {
-    const newVal = {}
-    addValue(newVal, curr)
-    newCurr = stack({ val: newVal, back: curr })
+    const val = {}
+    addValue(val, curr)
+    newCurr = stack({ val, back: curr })
   } else {
     newCurr = curr.back
   }
@@ -96,16 +96,16 @@ const parseObject = (input, cursor, curr) => {
 const parseArray = (input, cursor, curr) => {
   let newCurr
   if (input[cursor] === `[`) {
-    const newVal = []
-    addValue(newVal, curr)
-    newCurr = stack({ val: newVal, back: curr })
+    const val = []
+    addValue(val, curr)
+    newCurr = stack({ val, back: curr })
   } else {
     newCurr = curr.back
   }
   return newCurr
 }
 
-const parseNumber = (input, cursor, curr, j) => {
+const parseNumber = (input, cursor, curr) => {
   const commaIdx = input.indexOf(`,`, cursor + 1)
   const arrIdx = input.indexOf(`]`, cursor + 1)
   const objIdx = input.indexOf(`}`, cursor + 1)
@@ -117,7 +117,7 @@ const parseNumber = (input, cursor, curr, j) => {
     idx = endCursor - 1
   } else {
     num = input.substring(cursor, j)
-    idx = j
+    idx = input.length
   }
   num = num.trim()
   num = parseInt(num)
