@@ -9,55 +9,49 @@
 const parser = input => {
   input = input.trim()
   const j = input.length
-  let curr = link({})
+  let pointer = createNode({})
   let i = 0
   while (i < j) {
     let cursor = i
     switch (true) {
       case isString(input[cursor]):
-        cursor = parseString(input, cursor, curr)
+        cursor = parseString(input, cursor, pointer)
         break;
       case isNumber(input[cursor]):
-        cursor = parseNumber(input, cursor, curr)
+        cursor = parseNumber(input, cursor, pointer)
         break;
       case isBoolean(input[cursor]):
-        cursor = parseBoolean(input, cursor, curr)
+        cursor = parseBoolean(input, cursor, pointer)
         break;
       case isNull(input[cursor]):
-        cursor = parseNull(cursor, curr)
+        cursor = parseNull(cursor, pointer)
         break;
-      case isObject(input[cursor]):
-        curr = parseObject(input, cursor, curr)
-        break;
-      case isArray(input[cursor]):
-        curr = parseArray(input, cursor, curr)
-        break;
-      default:
-        i++
+      case isReference(input[cursor]):
+        pointer = parseReference(input, cursor, pointer)
         break;
     }
     i = cursor + 1
   }
-  return curr.val
+  return pointer.val
 }
 
-const addValue = (value, curr) => {
-  const {key, val} = curr
+const addValue = (value, pointer) => {
+  const {key, val} = pointer
   if (Array.isArray(val)) {
     val.push(value)
   } else if(val) {
     if (key) {
       val[key] = value
-      curr.key = null
+      pointer.key = null
     } else {
-      curr.key = value
+      pointer.key = value
     }
   } else {
-    curr.val = value
+    pointer.val = value
   }
 }
 
-const link = ({val = null, key = null, back = null}) => ({val, key, back})
+const createNode = ({val = null, key = null, back = null}) => ({val, key, back})
 const isString = v => v === `"`
 const isObject = v => v === `{` || v === `}`
 const isArray = v => v === `[` || v === `]`
@@ -66,82 +60,53 @@ const isNumber = v => v === '-' || parseInt(v) > -1
 const isBoolean = v => v === 't' || v === 'f'
 const isNull = v => v === 'n'
 
-const parseString = (input, cursor, curr) => {
-  let idx = input.indexOf(`"`, cursor + 1)
-  let count = 0, max = 10000
-  while (input[idx - 1] === `\\` && count < max) {
-    idx = input.indexOf(`"`, idx + 1)
-    count++
+const parseReference = (input, cursor, pointer) => {
+  let newPointer
+  const delimiter = isObject(input[cursor]) ? `{` : `[`
+  if (input[cursor] === delimiter) {
+    const val = isObject(input[cursor]) ? {} : []
+    addValue(val, pointer)
+    newPointer = createNode({ val, back: pointer })
+  } else {
+    newPointer = pointer.back
   }
-  if (count === max) {
-    throw new Error('overflow count in parseString')
+  return newPointer
+}
+
+const parseString = (input, cursor, pointer) => {
+  const findString = index => input.indexOf(`"`, index + 1)
+  let idx = findString(cursor)
+  while (input[idx - 1] === `\\`) {
+    idx = findString(idx)
   }
-  let str = input.substring(cursor + 1, idx)
-  addValue(str, curr)
+  const str = input.substring(cursor + 1, idx)
+  addValue(str, pointer)
   return idx
 }
 
-const parseObject = (input, cursor, curr) => {
-  let newCurr
-  if (input[cursor] === `{`) {
-    const val = {}
-    addValue(val, curr)
-    newCurr = link({ val, back: curr })
-  } else {
-    newCurr = curr.back
-  }
-  return newCurr
-}
-
-const parseArray = (input, cursor, curr) => {
-  let newCurr
-  if (input[cursor] === `[`) {
-    const val = []
-    addValue(val, curr)
-    newCurr = link({ val, back: curr })
-  } else {
-    newCurr = curr.back
-  }
-  return newCurr
-}
-
-const parseNumber = (input, cursor, curr) => {
+const parseNumber = (input, cursor, pointer) => {
   const commaIdx = input.indexOf(`,`, cursor + 1)
   const arrIdx = input.indexOf(`]`, cursor + 1)
   const objIdx = input.indexOf(`}`, cursor + 1)
-  let idx = cursor
-  let num
   const endCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(v => v > -1))
-  if (endCursor > -1) {
-    num = input.substring(cursor, endCursor)
-    idx = endCursor - 1
-  } else {
-    num = input.substring(cursor, j)
-    idx = input.length
-  }
-  num = num.trim()
+  let num = input.substring(cursor, endCursor).trim()
   num = parseInt(num)
-  addValue(num, curr)
+  addValue(num, pointer)
+  return endCursor - 1
+}
+
+const parseBoolean = (input, cursor, pointer) => {
+  const isTrue = input[cursor] === 't'
+  const val = isTrue ? true : false
+  const idx = cursor + (isTrue ? 3 : 4)
+  addValue(val, pointer)
   return idx
 }
 
-const parseBoolean = (input, cursor, curr) => {
-  let val, idx
-  if (input[cursor] === 't') {
-    val = true
-    idx = cursor + 3
-  } else {
-    val = false
-    idx = cursor + 4
-  }
-  addValue(val, curr)
-  return idx
-}
-
-const parseNull = (cursor, curr) => {
+const parseNull = (cursor, pointer) => {
   const val = null
   const idx = cursor + 3
-  addValue(val, curr)
+  addValue(val, pointer)
   return idx
 }
 
