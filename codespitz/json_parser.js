@@ -6,7 +6,6 @@
  * Object: {String: Value}
  * Array: [Value[, ...Value]]
  */
-const stack = ({val = null, key = null, back = null}) => ({val, key, back})
 const parser = input => {
   input = input.trim()
   const j = input.length
@@ -27,12 +26,13 @@ const parser = input => {
       const {idx} = parseNull(cursor, curr)
       i = idx + 1
     } else {
-      if (isObject(input[cursor])) {
-        const {newCurr} = parseObject(input, cursor, curr)
+      if (isReference(input[cursor])) {
+        const {newCurr} = isObject(input[cursor])
+          ? parseObject(input, cursor, curr)
+          : parseArray(input, cursor, curr)
         curr = newCurr
-      } else if (isArray(input[cursor])) {
-        const {newCurr} = parseArray(input, cursor, curr)
-        curr = newCurr
+      } else {
+        i++
       }
       i++
     }
@@ -56,9 +56,11 @@ const addValue = (value, curr) => {
   }
 }
 
+const stack = ({val = null, key = null, back = null}) => ({val, key, back})
 const isString = v => v === `"`
 const isObject = v => v === `{` || v === `}`
 const isArray = v => v === `[` || v === `]`
+const isReference = v => isObject(v) || isArray(v)
 const isNumber = v => v === '-' || parseInt(v) > -1
 const isBoolean = v => v === 't' || v === 'f'
 const isNull = v => v === 'n'
