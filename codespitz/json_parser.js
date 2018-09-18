@@ -9,7 +9,7 @@
 const parser = input => {
   input = input.trim()
   const j = input.length
-  let curr = stack({})
+  let curr = link({})
   let i = 0
   while (i < j) {
     let cursor = i
@@ -57,7 +57,7 @@ const addValue = (value, curr) => {
   }
 }
 
-const stack = ({val = null, key = null, back = null}) => ({val, key, back})
+const link = ({val = null, key = null, back = null}) => ({val, key, back})
 const isString = v => v === `"`
 const isObject = v => v === `{` || v === `}`
 const isArray = v => v === `[` || v === `]`
@@ -86,7 +86,7 @@ const parseObject = (input, cursor, curr) => {
   if (input[cursor] === `{`) {
     const val = {}
     addValue(val, curr)
-    newCurr = stack({ val, back: curr })
+    newCurr = link({ val, back: curr })
   } else {
     newCurr = curr.back
   }
@@ -98,7 +98,7 @@ const parseArray = (input, cursor, curr) => {
   if (input[cursor] === `[`) {
     const val = []
     addValue(val, curr)
-    newCurr = stack({ val, back: curr })
+    newCurr = link({ val, back: curr })
   } else {
     newCurr = curr.back
   }
