@@ -6,10 +6,11 @@
  * Object: {String: Value}
  * Array: [Value[, ...Value]]
  */
+const stack = ({val = null, key = null, back = null}) => ({val, key, back})
 const parser = input => {
   input = input.trim()
   const j = input.length
-  let curr = {val: null, key: null, back: null}
+  let curr = stack({})
   let i = 0
   while (i < j) {
     const cursor = i
@@ -82,11 +83,7 @@ const parseObject = (input, cursor, curr) => {
   if (input[cursor] === `{`) {
     const newVal = {}
     addValue(newVal, curr)
-    newCurr = {
-      val: newVal,
-      back: curr,
-      key: null
-    }
+    newCurr = stack({ val: newVal, back: curr })
   } else {
     newCurr = curr.back
   }
@@ -98,11 +95,7 @@ const parseArray = (input, cursor, curr) => {
   if (input[cursor] === `[`) {
     const newVal = []
     addValue(newVal, curr)
-    newCurr = {
-      val: newVal,
-      back: curr,
-      key: null
-    }
+    newCurr = stack({ val: newVal, back: curr })
   } else {
     newCurr = curr.back
   }
