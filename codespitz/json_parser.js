@@ -84,7 +84,8 @@ const parseObject = (input, cursor, curr) => {
     addValue(newVal, curr)
     newCurr = {
       val: newVal,
-      back: curr
+      back: curr,
+      key: null
     }
   } else {
     newCurr = curr.back
@@ -99,7 +100,8 @@ const parseArray = (input, cursor, curr) => {
     addValue(newVal, curr)
     newCurr = {
       val: newVal,
-      back: curr
+      back: curr,
+      key: null
     }
   } else {
     newCurr = curr.back
