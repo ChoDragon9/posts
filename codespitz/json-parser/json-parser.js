@@ -67,9 +67,10 @@ const parseString = (input, cursor, pointer) => {
 }
 
 const parseNumber = (input, cursor, pointer) => {
-  const commaIdx = input.indexOf(`,`, cursor + 1)
-  const arrIdx = input.indexOf(`]`, cursor + 1)
-  const objIdx = input.indexOf(`}`, cursor + 1)
+  const nextCursor = cursor + 1
+  const commaIdx = input.indexOf(`,`, nextCursor)
+  const arrIdx = input.indexOf(`]`, nextCursor)
+  const objIdx = input.indexOf(`}`, nextCursor)
   const endCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(v => v > -1))
   let num = input.substring(cursor, endCursor).trim()
   num = parseFloat(num)
