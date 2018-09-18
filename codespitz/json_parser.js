@@ -26,13 +26,12 @@ const parser = input => {
       const {idx} = parseNull(cursor, curr)
       i = idx + 1
     } else {
-      if (isReference(input[cursor])) {
-        const {newCurr} = isObject(input[cursor])
-          ? parseObject(input, cursor, curr)
-          : parseArray(input, cursor, curr)
+      if (isObject(input[cursor])) {
+        const {newCurr} = parseObject(input, cursor, curr)
         curr = newCurr
-      } else {
-        i++
+      } else if (isArray(input[cursor])) {
+        const {newCurr} = parseArray(input, cursor, curr)
+        curr = newCurr
       }
       i++
     }
