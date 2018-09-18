@@ -62,8 +62,16 @@ const isBoolean = v => v === 't' || v === 'f'
 const isNull = v => v === 'n'
 
 const parseString = (input, cursor, curr) => {
-  const idx = input.indexOf(`"`, cursor + 1)
-  const str = input.substring(cursor + 1, idx)
+  let idx = input.indexOf(`"`, cursor + 1)
+  let count = 0, max = 10000
+  while (input[idx - 1] === `\\` && count < max) {
+    idx = input.indexOf(`"`, idx + 1)
+    count++
+  }
+  if (count === max) {
+    throw new Error('overflow count in parseString')
+  }
+  let str = input.substring(cursor + 1, idx)
   addValue(str, curr)
   return {idx}
 }

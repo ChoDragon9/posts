@@ -12,6 +12,18 @@ describe('json_parser', () => {
     // Then
     expect(result).toEqual(`value`)
   })
+
+  it('parser - String - Empty', () => {
+    // Given
+    const html = `""`
+
+    // When
+    const result = parser(html)
+
+    // Then
+    expect(result).toEqual(``)
+  })
+
   it('parser - String - Unicode', () => {
     // Given
     const html = `"value\\"value"`
