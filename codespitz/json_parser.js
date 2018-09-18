@@ -12,29 +12,31 @@ const parser = input => {
   let curr = stack({})
   let i = 0
   while (i < j) {
-    const cursor = i
-    if (isString(input[cursor])) {
-      const {idx} = parseString(input, cursor, curr)
-      i = idx + 1
-    } else  if (isNumber(input[cursor])){
-      const {idx} = parseNumber(input, cursor, curr, j)
-      i = idx + 1
-    } else if (isBoolean(input[cursor])) {
-      const {idx} = parseBoolean(input, cursor, curr)
-      i = idx + 1
-    } else if (isNull(input[cursor])) {
-      const {idx} = parseNull(cursor, curr)
-      i = idx + 1
-    } else {
-      if (isObject(input[cursor])) {
-        const {newCurr} = parseObject(input, cursor, curr)
-        curr = newCurr
-      } else if (isArray(input[cursor])) {
-        const {newCurr} = parseArray(input, cursor, curr)
-        curr = newCurr
-      }
-      i++
+    let cursor = i
+    switch (true) {
+      case isString(input[cursor]):
+        cursor = parseString(input, cursor, curr)
+        break;
+      case isNumber(input[cursor]):
+        cursor = parseNumber(input, cursor, curr, j)
+        break;
+      case isBoolean(input[cursor]):
+        cursor = parseBoolean(input, cursor, curr)
+        break;
+      case isNull(input[cursor]):
+        cursor = parseNull(cursor, curr)
+        break;
+      case isObject(input[cursor]):
+        curr = parseObject(input, cursor, curr)
+        break;
+      case isArray(input[cursor]):
+        curr = parseArray(input, cursor, curr)
+        break;
+      default:
+        i++
+        break;
     }
+    i = cursor + 1
   }
   return curr.val
 }
@@ -76,7 +78,7 @@ const parseString = (input, cursor, curr) => {
   }
   let str = input.substring(cursor + 1, idx)
   addValue(str, curr)
-  return {idx}
+  return idx
 }
 
 const parseObject = (input, cursor, curr) => {
@@ -88,7 +90,7 @@ const parseObject = (input, cursor, curr) => {
   } else {
     newCurr = curr.back
   }
-  return {newCurr}
+  return newCurr
 }
 
 const parseArray = (input, cursor, curr) => {
@@ -100,7 +102,7 @@ const parseArray = (input, cursor, curr) => {
   } else {
     newCurr = curr.back
   }
-  return {newCurr}
+  return newCurr
 }
 
 const parseNumber = (input, cursor, curr, j) => {
@@ -120,7 +122,7 @@ const parseNumber = (input, cursor, curr, j) => {
   num = num.trim()
   num = parseInt(num)
   addValue(num, curr)
-  return {idx}
+  return idx
 }
 
 const parseBoolean = (input, cursor, curr) => {
@@ -133,14 +135,14 @@ const parseBoolean = (input, cursor, curr) => {
     idx = cursor + 4
   }
   addValue(val, curr)
-  return {idx}
+  return idx
 }
 
 const parseNull = (cursor, curr) => {
   const val = null
   const idx = cursor + 3
   addValue(val, curr)
-  return {idx}
+  return idx
 }
 
 module.exports = {
