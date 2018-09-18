@@ -24,7 +24,7 @@ describe('json_parser_basic_value', () => {
     expect(result).toEqual(``)
   })
 
-  it('parser - String - Unicode', () => {
+  it('parser - String - Special Char', () => {
     // Given
     const html = `"value\\"value"`
 
@@ -33,6 +33,17 @@ describe('json_parser_basic_value', () => {
 
     // Then
     expect(result).toEqual(`value\\"value`)
+  })
+
+  it('parser - String', () => {
+    // Given
+    const html = `"WHITE FROWNING FACE (U+2639)"`
+
+    // When
+    const result = parser(html)
+
+    // Then
+    expect(result).toEqual("WHITE FROWNING FACE (U+2639)")
   })
 
   it('parser -  Number', () => {
