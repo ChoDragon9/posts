@@ -24,6 +24,30 @@ const step = (str, pred) => {
   }
 }
 
+const reduce = (str, iter, init) => {
+  if (not(isString(str))) {
+    return
+  }
+  let index = 0
+  const len = str.length
+  let acc = init
+  while (index < len) {
+    const char = str[index]
+    const [nextStep, newAcc] = iter({char, index, str, acc})
+    acc = newAcc
+    if (not(isUndefined(nextStep))) {
+      if (nextStep < index) {
+        break
+      } else {
+        index = nextStep
+      }
+    } else {
+      index++
+    }
+  }
+  return acc
+}
+
 const dispatch = (...fns) => {
   return (...args) => {
     for (let fn of fns) {
@@ -44,6 +68,7 @@ const go = (val, ...fns) => {
 
 module.exports = {
   step,
+  reduce,
   not,
   isUndefined,
   trim,

@@ -9,6 +9,7 @@ const isNull = v => v === 'n'
 module.exports = {
   isString,
   isObject,
+  isArray,
   isReference,
   isNumber,
   isBoolean,
