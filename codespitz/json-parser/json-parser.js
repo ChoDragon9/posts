@@ -42,19 +42,6 @@ const parser = input => {
   return getValue(pointer)
 }
 
-const parseReference = (input, cursor, pointer) => {
-  let newPointer
-  const delimiter = isObject(input[cursor]) ? `{` : `[`
-  if (input[cursor] === delimiter) {
-    const val = isObject(input[cursor]) ? {} : []
-    setValue(pointer, val)
-    newPointer = createNode({ val, back: pointer })
-  } else {
-    newPointer = getBackword(pointer)
-  }
-  return newPointer
-}
-
 const parseString = (input, cursor, pointer) => {
   const findString = index => input.indexOf(`"`, index + 1)
   let newCursor = findString(cursor)
@@ -91,6 +78,19 @@ const parseNull = (cursor, pointer) => {
   const newCursor = cursor + 3
   setValue(pointer, val)
   return newCursor
+}
+
+const parseReference = (input, cursor, pointer) => {
+  let newPointer
+  const delimiter = isObject(input[cursor]) ? `{` : `[`
+  if (input[cursor] === delimiter) {
+    const val = isObject(input[cursor]) ? {} : []
+    setValue(pointer, val)
+    newPointer = createNode({ val, back: pointer })
+  } else {
+    newPointer = getBackword(pointer)
+  }
+  return newPointer
 }
 
 module.exports = { parser }
