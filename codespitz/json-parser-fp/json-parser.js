@@ -30,7 +30,7 @@ const parser = input => {
       const result = extract({cursor, index, str})
       if (result) {
         const [index, val] = result
-        if (not(isUndefined(val))) {
+        if (go(val, isUndefined, not)) {
           setValue(pointer, val)
         }
         return index + 1
