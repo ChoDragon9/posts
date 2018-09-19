@@ -1,5 +1,6 @@
 const {
   isObject,
+  isArray,
   isReference,
 } = require('./helper')
 const {
@@ -39,15 +40,37 @@ const parser = input => {
 
 const parseReference = (char, pointer) => {
   let newPointer
-  const delimiter = isObject(char) ? `{` : `[`
-  if (char === delimiter) {
-    const val = isObject(char) ? {} : []
-    setValue(pointer, val)
-    newPointer = createNode({ val, back: pointer })
-  } else {
+  if (isEndRef(char)) {
     newPointer = getBackword(pointer)
+  } else {
+    const val = ref(char)
+    setValue(pointer, val)
+    newPointer = createNode({val, back: pointer})
   }
   return newPointer
 }
+
+const ref = char => {
+  if (isObject(char)) {
+    return {}
+  } else {
+    if (isArray(char)) {
+      return []
+    }
+  }
+}
+
+const isEndRef = char => {
+  if (isObject(char)) {
+    return char === '}'
+  } else {
+    if (isArray(char)) {
+      return char === ']'
+    }
+  }
+}
+
+// isObject or isArray => createRef => setValue
+// isObject or isArray => move back
 
 module.exports = { parser }
