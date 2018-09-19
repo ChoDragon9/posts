@@ -20,21 +20,22 @@ const parser = input => {
   let pointer = createNode({})
   while (i < j) {
     let cursor = i
-    if (isReference(input[cursor])) {
-      pointer = parseReference(input, cursor, pointer)
+    const cursorStr = input[cursor]
+    if (isReference(cursorStr)) {
+      pointer = parseReference(cursorStr, pointer)
     } else {
       let val
       switch (true) {
-        case isString(input[cursor]):
+        case isString(cursorStr):
           [cursor, val] = parseString(input, cursor)
           break;
-        case isNumber(input[cursor]):
+        case isNumber(cursorStr):
           [cursor, val] = parseNumber(input, cursor)
           break;
-        case isBoolean(input[cursor]):
+        case isBoolean(cursorStr):
           [cursor, val] = parseBoolean(input, cursor)
           break;
-        case isNull(input[cursor]):
+        case isNull(cursorStr):
           [cursor, val] = parseNull(cursor)
           break;
       }
@@ -93,11 +94,11 @@ const parseNull = (cursor) => {
   return [newCursor, val]
 }
 
-const parseReference = (input, cursor, pointer) => {
+const parseReference = (cursorStr, pointer) => {
   let newPointer
-  const delimiter = isObject(input[cursor]) ? `{` : `[`
-  if (input[cursor] === delimiter) {
-    const val = isObject(input[cursor]) ? {} : []
+  const delimiter = isObject(cursorStr) ? `{` : `[`
+  if (cursorStr === delimiter) {
+    const val = isObject(cursorStr) ? {} : []
     setValue(pointer, val)
     newPointer = createNode({ val, back: pointer })
   } else {
