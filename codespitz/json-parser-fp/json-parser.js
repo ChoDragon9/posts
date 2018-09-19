@@ -21,10 +21,10 @@ const {
 } = require('./fp')
 
 const extract = dispatch(
-  v => isString(v) ? parseString(str, index) : undefined,
-  v => isNumber(v) ? parseNumber(str, index) : undefined,
-  v => isBoolean(v) ? parseBoolean(str, index) : undefined,
-  v => isNull(v) ? parseNull(str, index) : undefined
+  ({cursor, index, str}) => isString(cursor) ? parseString(str, index) : undefined,
+  ({cursor, index, str}) => isNumber(cursor) ? parseNumber(str, index) : undefined,
+  ({cursor, index, str}) => isBoolean(cursor) ? parseBoolean(str, index) : undefined,
+  ({cursor, index, str}) => isNull(cursor) ? parseNull(str, index) : undefined
 )
 
 const parser = input => {
@@ -35,9 +35,12 @@ const parser = input => {
       pointer = parseReference(cursor, pointer)
     } else {
       let val
-      [index, val] = extract(cursor)
-      if (not(isUndefined(val))) {
-        setValue(pointer, val)
+      const result = extract({cursor, index, str})
+      if (result) {
+        [index, val] = result
+        if (not(isUndefined(val))) {
+          setValue(pointer, val)
+        }
       }
       return index + 1
     }
@@ -85,7 +88,7 @@ const parseBoolean = (input, cursor) => {
   return [newCursor, val]
 }
 
-const parseNull = (cursor) => {
+const parseNull = (input, cursor) => {
   const val = null
   const newCursor = cursor + 3
   return [newCursor, val]

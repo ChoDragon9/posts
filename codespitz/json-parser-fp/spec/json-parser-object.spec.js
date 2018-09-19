@@ -39,7 +39,7 @@ describe('json_parser_object', () => {
       ]
     })
   })
-
+  return
   it('parser - Object - String', () => {
     // Given
     const html = '{"key1": "value1", "key2": "value2"}'
