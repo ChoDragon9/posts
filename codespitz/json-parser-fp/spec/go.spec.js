@@ -7,7 +7,7 @@ describe('fp', () => {
     const count = 0
 
     // When
-    const result = go(count, v => v++, v => v++)
+    const result = go(count, v => v + 1, v => v + 1)
 
     // Then
     expect(result).toEqual(2)

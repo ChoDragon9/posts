@@ -36,11 +36,10 @@ const dispatch = (...fns) => {
 }
 
 const go = (val, ...fns) => {
-  let ret
   for (let fn of fns) {
-    ret = fn(val)
+    val = fn(val)
   }
-  return ret
+  return val
 }
 
 module.exports = {
@@ -48,5 +47,6 @@ module.exports = {
   not,
   isUndefined,
   trim,
+  go,
   dispatch
 }
