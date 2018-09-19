@@ -10,10 +10,10 @@ const {
 } = require('./fp')
 
 const extract = dispatch(
-  ({cursor, index, str}) => isString(cursor) ? extractString(str, index) : undefined,
-  ({cursor, index, str}) => isNumber(cursor) ? extractNumber(str, index) : undefined,
-  ({cursor, index, str}) => isBoolean(cursor) ? extractBoolean(str, index) : undefined,
-  ({cursor, index}) => isNull(cursor) ? extractNull(index) : undefined
+  ({char, index, str}) => isString(char) ? extractString(str, index) : undefined,
+  ({char, index, str}) => isNumber(char) ? extractNumber(str, index) : undefined,
+  ({char, index, str}) => isBoolean(char) ? extractBoolean(str, index) : undefined,
+  ({char, index}) => isNull(char) ? extractNull(index) : undefined
 )
 
 const extractString = (inputStr, index) => {

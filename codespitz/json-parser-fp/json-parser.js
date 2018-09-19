@@ -20,11 +20,11 @@ const { extract } = require('./extract')
 const parser = input => {
   input = trim(input)
   let pointer = createNode({})
-  step(input, ({cursor, index, str}) => {
-    if (isReference(cursor)) {
-      pointer = parseReference(cursor, pointer)
+  step(input, ({char, index, str}) => {
+    if (isReference(char)) {
+      pointer = parseReference(char, pointer)
     } else {
-      const result = extract({cursor, index, str})
+      const result = extract({char, index, str})
       if (result) {
         const [index, val] = result
         if (go(val, isUndefined, not)) {
@@ -37,11 +37,11 @@ const parser = input => {
   return getValue(pointer)
 }
 
-const parseReference = (cursorStr, pointer) => {
+const parseReference = (char, pointer) => {
   let newPointer
-  const delimiter = isObject(cursorStr) ? `{` : `[`
-  if (cursorStr === delimiter) {
-    const val = isObject(cursorStr) ? {} : []
+  const delimiter = isObject(char) ? `{` : `[`
+  if (char === delimiter) {
+    const val = isObject(char) ? {} : []
     setValue(pointer, val)
     newPointer = createNode({ val, back: pointer })
   } else {
