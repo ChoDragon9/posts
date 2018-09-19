@@ -52,8 +52,9 @@ const parseString = (input, cursor) => {
   const str = input.substring(cursor + 1, newCursor)
   return [newCursor, str]
 }
+
+const findString = index => input.indexOf(`"`, index + 1)
 const findEndString = (input, cursor) => {
-  const findString = index => input.indexOf(`"`, index + 1)
   let newCursor = findString(cursor)
   while (input[newCursor - 1] === `\\`) {
     newCursor = findString(newCursor)
