@@ -22,7 +22,13 @@ const parser = input => {
   input = trim(input)
   const pointer = reduce(input, ({char, index, str, acc}) => {
     if (isReference(char)) {
-      return [, parseReference(char, acc)]
+      if (isEndRef(char)) {
+        acc = getBackword(acc)
+      } else {
+        const val = ref(char)
+        setValue(acc, val)
+        acc = createNode({val, back: acc})
+      }
     } else {
       const result = extract({char, index, str})
       if (result) {
@@ -30,25 +36,12 @@ const parser = input => {
         if (go(val, isUndefined, not)) {
           setValue(acc, val)
         }
-        return [index + 1, acc]
-      } else {
-        return [, acc]
+        return [acc, index + 1]
       }
     }
+    return [acc]
   }, createNode({}))
   return getValue(pointer)
-}
-
-const parseReference = (char, pointer) => {
-  let newPointer
-  if (isEndRef(char)) {
-    newPointer = getBackword(pointer)
-  } else {
-    const val = ref(char)
-    setValue(pointer, val)
-    newPointer = createNode({val, back: pointer})
-  }
-  return newPointer
 }
 
 const ref = char => {

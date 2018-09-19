@@ -33,7 +33,7 @@ const reduce = (str, iter, init) => {
   let acc = init
   while (index < len) {
     const char = str[index]
-    const [nextStep, newAcc] = iter({char, index, str, acc})
+    const [newAcc, nextStep] = iter({char, index, str, acc})
     acc = newAcc
     if (not(isUndefined(nextStep))) {
       if (nextStep < index) {

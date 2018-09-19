@@ -9,7 +9,7 @@ describe('fp', () => {
     // When
     const arr = reduce(str, ({char, index, acc}) => {
       acc[index] = char
-      return [, acc]
+      return [acc]
     }, [])
 
     // Then
@@ -24,9 +24,9 @@ describe('fp', () => {
     const arr = reduce(str, ({char, index, acc}) => {
       acc.push(char)
       if (index === 1) {
-        return [4, acc]
+        return [acc, 4]
       } else {
-        return [, acc]
+        return [acc]
       }
     }, [])
 
@@ -42,9 +42,9 @@ describe('fp', () => {
     const arr = reduce(str, ({char, index, acc}) => {
       acc.push(char)
       if (index === 1) {
-        return [0, acc]
+        return [acc, 0]
       } else {
-        return [, acc]
+        return [acc]
       }
     }, [])
 
