@@ -3,11 +3,27 @@ const {
   isNumber,
   isBoolean,
   isNull,
+  ref,
+  isEndRef
 } = require('./helper')
+const {
+  createNode,
+  setValue,
+  getBackword
+} = require('./pointer')
 const {
   trim,
   dispatch
 } = require('./fp')
+
+const extractRef = dispatch(
+  ([acc, char]) => isEndRef(char) ? getBackword(acc) : undefined,
+  ([acc, char]) => {
+    const val = ref(char)
+    setValue(acc, val)
+    return createNode({val, back: acc})
+  }
+)
 
 const extract = dispatch(
   ({char, index, str}) => isString(char) ? extractString(str, index) : undefined,
@@ -63,5 +79,6 @@ const extractNull = (index) => {
 }
 
 module.exports = {
-  extract
+  extract,
+  extractRef
 }

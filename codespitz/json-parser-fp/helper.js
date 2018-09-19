@@ -6,6 +6,26 @@ const isNumber = v => v === '-' || parseFloat(v) > -1
 const isBoolean = v => v === 't' || v === 'f'
 const isNull = v => v === 'n'
 
+const ref = char => {
+  if (isObject(char)) {
+    return {}
+  } else {
+    if (isArray(char)) {
+      return []
+    }
+  }
+}
+
+const isEndRef = char => {
+  if (isObject(char)) {
+    return char === '}'
+  } else {
+    if (isArray(char)) {
+      return char === ']'
+    }
+  }
+}
+
 module.exports = {
   isString,
   isObject,
@@ -13,5 +33,7 @@ module.exports = {
   isReference,
   isNumber,
   isBoolean,
-  isNull
+  isNull,
+  ref,
+  isEndRef
 }
