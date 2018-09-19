@@ -20,22 +20,23 @@ const parser = input => {
   let pointer = createNode({})
   while (i < j) {
     let cursor = i
-    switch (true) {
-      case isString(input[cursor]):
-        cursor = parseString(input, cursor, pointer)
-        break;
-      case isNumber(input[cursor]):
-        cursor = parseNumber(input, cursor, pointer)
-        break;
-      case isBoolean(input[cursor]):
-        cursor = parseBoolean(input, cursor, pointer)
-        break;
-      case isNull(input[cursor]):
-        cursor = parseNull(cursor, pointer)
-        break;
-      case isReference(input[cursor]):
-        pointer = parseReference(input, cursor, pointer)
-        break;
+    if (isReference(input[cursor])) {
+      pointer = parseReference(input, cursor, pointer)
+    } else {
+      switch (true) {
+        case isString(input[cursor]):
+          cursor = parseString(input, cursor, pointer)
+          break;
+        case isNumber(input[cursor]):
+          cursor = parseNumber(input, cursor, pointer)
+          break;
+        case isBoolean(input[cursor]):
+          cursor = parseBoolean(input, cursor, pointer)
+          break;
+        case isNull(input[cursor]):
+          cursor = parseNull(cursor, pointer)
+          break;
+      }
     }
     i = cursor + 1
   }
