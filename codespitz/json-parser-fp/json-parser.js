@@ -16,8 +16,16 @@ const {
   step,
   not,
   isUndefined,
-  trim
+  trim,
+  dispatch
 } = require('./fp')
+
+const extract = dispatch(
+  v => isString(v) ? parseString(str, index) : undefined,
+  v => isNumber(v) ? parseNumber(str, index) : undefined,
+  v => isBoolean(v) ? parseBoolean(str, index) : undefined,
+  v => isNull(v) ? parseNull(str, index) : undefined
+)
 
 const parser = input => {
   input = trim(input)
@@ -27,20 +35,7 @@ const parser = input => {
       pointer = parseReference(cursor, pointer)
     } else {
       let val
-      switch (true) {
-        case isString(cursor):
-          [index, val] = parseString(str, index)
-          break;
-        case isNumber(cursor):
-          [index, val] = parseNumber(str, index)
-          break;
-        case isBoolean(cursor):
-          [index, val] = parseBoolean(str, index)
-          break;
-        case isNull(cursor):
-          [index, val] = parseNull(index)
-          break;
-      }
+      [index, val] = extract(cursor)
       if (not(isUndefined(val))) {
         setValue(pointer, val)
       }
