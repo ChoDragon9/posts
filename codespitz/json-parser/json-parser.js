@@ -60,10 +60,11 @@ const parseNumber = (input, cursor, pointer) => {
   const arrIdx = input.indexOf(`]`, nextCursor)
   const objIdx = input.indexOf(`}`, nextCursor)
   const endCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(v => v > -1))
+  const newCursor = endCursor - 1
   let num = input.substring(cursor, endCursor).trim()
   num = parseFloat(num)
   setValue(pointer, num)
-  return endCursor - 1
+  return newCursor
 }
 
 const parseBoolean = (input, cursor, pointer) => {
