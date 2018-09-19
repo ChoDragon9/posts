@@ -23,19 +23,23 @@ const parser = input => {
     if (isReference(input[cursor])) {
       pointer = parseReference(input, cursor, pointer)
     } else {
+      let val
       switch (true) {
         case isString(input[cursor]):
-          cursor = parseString(input, cursor, pointer)
+          [cursor, val] = parseString(input, cursor)
           break;
         case isNumber(input[cursor]):
-          cursor = parseNumber(input, cursor, pointer)
+          [cursor, val] = parseNumber(input, cursor)
           break;
         case isBoolean(input[cursor]):
-          cursor = parseBoolean(input, cursor, pointer)
+          [cursor, val] = parseBoolean(input, cursor)
           break;
         case isNull(input[cursor]):
-          cursor = parseNull(cursor, pointer)
+          [cursor, val] = parseNull(cursor)
           break;
+      }
+      if (typeof val !== 'undefined') {
+        setValue(pointer, val)
       }
     }
     i = cursor + 1
@@ -43,18 +47,17 @@ const parser = input => {
   return getValue(pointer)
 }
 
-const parseString = (input, cursor, pointer) => {
+const parseString = (input, cursor) => {
   const findString = index => input.indexOf(`"`, index + 1)
   let newCursor = findString(cursor)
   while (input[newCursor - 1] === `\\`) {
     newCursor = findString(newCursor)
   }
   const str = input.substring(cursor + 1, newCursor)
-  setValue(pointer, str)
-  return newCursor
+  return [newCursor, str]
 }
 
-const parseNumber = (input, cursor, pointer) => {
+const parseNumber = (input, cursor) => {
   const nextCursor = cursor + 1
   const commaIdx = input.indexOf(`,`, nextCursor)
   const arrIdx = input.indexOf(`]`, nextCursor)
@@ -63,23 +66,20 @@ const parseNumber = (input, cursor, pointer) => {
   const newCursor = endCursor - 1
   let num = input.substring(cursor, endCursor).trim()
   num = parseFloat(num)
-  setValue(pointer, num)
-  return newCursor
+  return [newCursor, num]
 }
 
-const parseBoolean = (input, cursor, pointer) => {
+const parseBoolean = (input, cursor) => {
   const isTrue = input[cursor] === 't'
   const val = isTrue ? true : false
   const newCursor = cursor + (isTrue ? 3 : 4)
-  setValue(pointer, val)
-  return newCursor
+  return [newCursor, val]
 }
 
-const parseNull = (cursor, pointer) => {
+const parseNull = (cursor) => {
   const val = null
   const newCursor = cursor + 3
-  setValue(pointer, val)
-  return newCursor
+  return [newCursor, val]
 }
 
 const parseReference = (input, cursor, pointer) => {
