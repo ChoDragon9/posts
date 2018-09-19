@@ -20,13 +20,6 @@ const {
   dispatch
 } = require('./fp')
 
-const extract = dispatch(
-  ({cursor, index, str}) => isString(cursor) ? parseString(str, index) : undefined,
-  ({cursor, index, str}) => isNumber(cursor) ? parseNumber(str, index) : undefined,
-  ({cursor, index, str}) => isBoolean(cursor) ? parseBoolean(str, index) : undefined,
-  ({cursor, index}) => isNull(cursor) ? parseNull(index) : undefined
-)
-
 const parser = input => {
   input = trim(input)
   let pointer = createNode({})
@@ -34,63 +27,69 @@ const parser = input => {
     if (isReference(cursor)) {
       pointer = parseReference(cursor, pointer)
     } else {
-      let val
       const result = extract({cursor, index, str})
       if (result) {
-        [index, val] = result
+        const [index, val] = result
         if (not(isUndefined(val))) {
           setValue(pointer, val)
         }
+        return index + 1
       }
-      return index + 1
     }
   })
   return getValue(pointer)
 }
 
-const parseString = (input, cursor) => {
-  const newCursor = findEndString(input, cursor)
-  const str = input.substring(cursor + 1, newCursor)
+const extract = dispatch(
+  ({cursor, index, str}) => isString(cursor) ? extractString(str, index) : undefined,
+  ({cursor, index, str}) => isNumber(cursor) ? extractNumber(str, index) : undefined,
+  ({cursor, index, str}) => isBoolean(cursor) ? extractBoolean(str, index) : undefined,
+  ({cursor, index}) => isNull(cursor) ? extractNull(index) : undefined
+)
+
+const extractString = (inputStr, index) => {
+  const newCursor = findEndString(inputStr, index)
+  const str = inputStr.substring(index + 1, newCursor)
   return [newCursor, str]
 }
 
-const findEndString = (input, cursor) => {
-  let newCursor = findString(input, cursor)
-  while (input[newCursor - 1] === `\\`) {
-    newCursor = findString(input, newCursor)
+const findEndString = (inputStr, index) => {
+  let newCursor = findString(inputStr, index)
+  while (inputStr[newCursor - 1] === `\\`) {
+    newCursor = findString(inputStr, newCursor)
   }
   return newCursor
 }
 
-const findString = (input, cursor) => input.indexOf(`"`, cursor + 1)
+const findString = (str, index) => str.indexOf(`"`, index + 1)
 
-const parseNumber = (input, cursor) => {
-  const nearCursor = findEndNumber(input, cursor)
+const extractNumber = (str, index) => {
+  const nearCursor = findEndNumber(str, index)
   const newCursor = nearCursor - 1
-  let num = trim(input.substring(cursor, nearCursor))
+  let num = trim(str.substring(index, nearCursor))
   num = parseFloat(num)
   return [newCursor, num]
 }
 
-const findEndNumber = (input, cursor) => {
-  const nextCursor = cursor + 1
-  const commaIdx = input.indexOf(`,`, nextCursor)
-  const arrIdx = input.indexOf(`]`, nextCursor)
-  const objIdx = input.indexOf(`}`, nextCursor)
+const findEndNumber = (str, index) => {
+  const nextCursor = index + 1
+  const commaIdx = str.indexOf(`,`, nextCursor)
+  const arrIdx = str.indexOf(`]`, nextCursor)
+  const objIdx = str.indexOf(`}`, nextCursor)
   const nearCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(v => v > -1))
   return nearCursor
 }
 
-const parseBoolean = (input, cursor) => {
-  const isTrue = input[cursor] === 't'
+const extractBoolean = (str, index) => {
+  const isTrue = str[index] === 't'
   const val = isTrue ? true : false
-  const newCursor = cursor + (isTrue ? 3 : 4)
+  const newCursor = index + (isTrue ? 3 : 4)
   return [newCursor, val]
 }
 
-const parseNull = (cursor) => {
+const extractNull = (index) => {
   const val = null
-  const newCursor = cursor + 3
+  const newCursor = index + 3
   return [newCursor, val]
 }
 
