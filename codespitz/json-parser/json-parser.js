@@ -58,15 +58,20 @@ const parseString = (input, cursor) => {
 }
 
 const parseNumber = (input, cursor) => {
+  const nearCursor = findNearCursor(input, cursor)
+  const newCursor = nearCursor - 1
+  let num = input.substring(cursor, nearCursor).trim()
+  num = parseFloat(num)
+  return [newCursor, num]
+}
+
+const findNearCursor = (input, cursor) => {
   const nextCursor = cursor + 1
   const commaIdx = input.indexOf(`,`, nextCursor)
   const arrIdx = input.indexOf(`]`, nextCursor)
   const objIdx = input.indexOf(`}`, nextCursor)
-  const endCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(v => v > -1))
-  const newCursor = endCursor - 1
-  let num = input.substring(cursor, endCursor).trim()
-  num = parseFloat(num)
-  return [newCursor, num]
+  const nearCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(v => v > -1))
+  return nearCursor
 }
 
 const parseBoolean = (input, cursor) => {
