@@ -8,8 +8,8 @@ describe('fp', () => {
 
     // When
     const arr = []
-    step(str, ({cursor, index}) => {
-      arr[index] = cursor
+    step(str, ({char, index}) => {
+      arr[index] = char
     })
 
     // Then
@@ -22,8 +22,8 @@ describe('fp', () => {
 
     // When
     const arr = []
-    step(str, ({cursor, index}) => {
-      arr.push(cursor)
+    step(str, ({char, index}) => {
+      arr.push(char)
       if (index === 1) {
         return 4
       }
@@ -39,8 +39,8 @@ describe('fp', () => {
 
     // When
     const arr = []
-    step(str, ({cursor, index}) => {
-      arr.push(cursor)
+    step(str, ({char, index}) => {
+      arr.push(char)
       if (index === 1) {
         return 0
       }
