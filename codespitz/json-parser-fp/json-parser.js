@@ -10,7 +10,7 @@ const {
   setValue
 } = require('./pointer')
 const {
-  step,
+  reduce,
   not,
   isUndefined,
   trim,
@@ -20,21 +20,22 @@ const { extract } = require('./extract')
 
 const parser = input => {
   input = trim(input)
-  let pointer = createNode({})
-  step(input, ({char, index, str}) => {
+  const pointer = reduce(input, ({char, index, str, acc}) => {
     if (isReference(char)) {
-      pointer = parseReference(char, pointer)
+      return [, parseReference(char, acc)]
     } else {
       const result = extract({char, index, str})
       if (result) {
         const [index, val] = result
         if (go(val, isUndefined, not)) {
-          setValue(pointer, val)
+          setValue(acc, val)
         }
-        return index + 1
+        return [index + 1, acc]
+      } else {
+        return [, acc]
       }
     }
-  })
+  }, createNode({}))
   return getValue(pointer)
 }
 
