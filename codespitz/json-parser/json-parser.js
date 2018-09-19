@@ -48,24 +48,28 @@ const parser = input => {
 }
 
 const parseString = (input, cursor) => {
+  const newCursor = findEndString(input, cursor)
+  const str = input.substring(cursor + 1, newCursor)
+  return [newCursor, str]
+}
+const findEndString = (input, cursor) => {
   const findString = index => input.indexOf(`"`, index + 1)
   let newCursor = findString(cursor)
   while (input[newCursor - 1] === `\\`) {
     newCursor = findString(newCursor)
   }
-  const str = input.substring(cursor + 1, newCursor)
-  return [newCursor, str]
+  return newCursor
 }
 
 const parseNumber = (input, cursor) => {
-  const nearCursor = findNearCursor(input, cursor)
+  const nearCursor = findEndNumber(input, cursor)
   const newCursor = nearCursor - 1
   let num = input.substring(cursor, nearCursor).trim()
   num = parseFloat(num)
   return [newCursor, num]
 }
 
-const findNearCursor = (input, cursor) => {
+const findEndNumber = (input, cursor) => {
   const nextCursor = cursor + 1
   const commaIdx = input.indexOf(`,`, nextCursor)
   const arrIdx = input.indexOf(`]`, nextCursor)
