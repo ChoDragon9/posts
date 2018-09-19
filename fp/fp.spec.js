@@ -1,4 +1,4 @@
-const reduce = (...args) => arr.reduce(...args)
+const reduce = (arr, iter, def) => arr.reduce(iter, def)
 
 const arr = []
 for (let char of '12345') {
