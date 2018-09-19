@@ -12,39 +12,41 @@ const {
   getValue,
   setValue
 } = require('./pointer')
+const {
+  step,
+  not,
+  isUndefined,
+  trim
+} = require('./fp')
 
 const parser = input => {
-  input = input.trim()
-  let i = 0
-  const j = input.length
+  input = trim(input)
   let pointer = createNode({})
-  while (i < j) {
-    let cursor = i
-    const cursorStr = input[cursor]
-    if (isReference(cursorStr)) {
-      pointer = parseReference(cursorStr, pointer)
+  step(input, ({cursor, index, str}) => {
+    if (isReference(cursor)) {
+      pointer = parseReference(cursor, pointer)
     } else {
       let val
       switch (true) {
-        case isString(cursorStr):
-          [cursor, val] = parseString(input, cursor)
+        case isString(cursor):
+          [index, val] = parseString(str, index)
           break;
-        case isNumber(cursorStr):
-          [cursor, val] = parseNumber(input, cursor)
+        case isNumber(cursor):
+          [index, val] = parseNumber(str, index)
           break;
-        case isBoolean(cursorStr):
-          [cursor, val] = parseBoolean(input, cursor)
+        case isBoolean(cursor):
+          [index, val] = parseBoolean(str, index)
           break;
-        case isNull(cursorStr):
-          [cursor, val] = parseNull(cursor)
+        case isNull(cursor):
+          [index, val] = parseNull(index)
           break;
       }
-      if (typeof val !== 'undefined') {
+      if (not(isUndefined(val))) {
         setValue(pointer, val)
       }
+      return index + 1
     }
-    i = cursor + 1
-  }
+  })
   return getValue(pointer)
 }
 
@@ -67,7 +69,7 @@ const findString = (input, cursor) => input.indexOf(`"`, cursor + 1)
 const parseNumber = (input, cursor) => {
   const nearCursor = findEndNumber(input, cursor)
   const newCursor = nearCursor - 1
-  let num = input.substring(cursor, nearCursor).trim()
+  let num = trim(input.substring(cursor, nearCursor))
   num = parseFloat(num)
   return [newCursor, num]
 }
