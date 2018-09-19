@@ -24,7 +24,7 @@ const extract = dispatch(
   ({cursor, index, str}) => isString(cursor) ? parseString(str, index) : undefined,
   ({cursor, index, str}) => isNumber(cursor) ? parseNumber(str, index) : undefined,
   ({cursor, index, str}) => isBoolean(cursor) ? parseBoolean(str, index) : undefined,
-  ({cursor, index, str}) => isNull(cursor) ? parseNull(str, index) : undefined
+  ({cursor, index}) => isNull(cursor) ? parseNull(index) : undefined
 )
 
 const parser = input => {
@@ -88,7 +88,7 @@ const parseBoolean = (input, cursor) => {
   return [newCursor, val]
 }
 
-const parseNull = (input, cursor) => {
+const parseNull = (cursor) => {
   const val = null
   const newCursor = cursor + 3
   return [newCursor, val]
