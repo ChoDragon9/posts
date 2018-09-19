@@ -35,6 +35,14 @@ const dispatch = (...fns) => {
   }
 }
 
+const go = (val, ...fns) => {
+  let ret
+  for (let fn of fns) {
+    ret = fn(val)
+  }
+  return ret
+}
+
 module.exports = {
   step,
   not,
