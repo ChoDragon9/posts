@@ -7,7 +7,7 @@ describe('prefix-notation', () => {
     const html = `"value"`
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
     expect(result).toEqual([`value`])
@@ -18,10 +18,10 @@ describe('prefix-notation', () => {
     const html = `""`
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
-    expect(result).toEqual(``)
+    expect(result).toEqual([``])
   })
 
   it('prefixNotation - String - Unicode', () => {
@@ -29,10 +29,10 @@ describe('prefix-notation', () => {
     const html = `"value\\"value"`
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
-    expect(result).toEqual(`value\\"value`)
+    expect(result).toEqual([`value\\"value`])
   })
 
   it('prefixNotation - String - Unicode', () => {
@@ -40,10 +40,10 @@ describe('prefix-notation', () => {
     const html = `"value\\"value"`
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
-    expect(result).toEqual(`value\\"value`)
+    expect(result).toEqual([`value\\"value`])
   })
 
   it('prefixNotation - String - Unicode', () => {
@@ -51,10 +51,10 @@ describe('prefix-notation', () => {
     const html = `"WHITE FROWNING FACE (U+2639)"`
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
-    expect(result).toEqual("WHITE FROWNING FACE (U+2639)")
+    expect(result).toEqual(["WHITE FROWNING FACE (U+2639)"])
   })
 
   it('prefixNotation - String - Unicode', () => {
@@ -62,12 +62,13 @@ describe('prefix-notation', () => {
     const html = `{"title":"\u041f\u043e\u043b\u0442\u043e\u0440\u0430 \u0417\u0435\u043c\u043b\u0435\u043a\u043e\u043f\u0430" }`
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
-    expect(result).toEqual({
-      title: `\u041f\u043e\u043b\u0442\u043e\u0440\u0430 \u0417\u0435\u043c\u043b\u0435\u043a\u043e\u043f\u0430`
-    })
+    expect(result).toEqual([
+      {}, "title",
+      "\u041f\u043e\u043b\u0442\u043e\u0440\u0430 \u0417\u0435\u043c\u043b\u0435\u043a\u043e\u043f\u0430"
+    ])
   })
 
   it('prefixNotation - Number', () => {
@@ -82,10 +83,11 @@ describe('prefix-notation', () => {
     ]`
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
     expect(result).toEqual([
+      [],
       0.4e006,
       0.4e-006,
       0.4e+006,
@@ -100,10 +102,10 @@ describe('prefix-notation', () => {
     const html = '123'
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
-    expect(result).toEqual(123)
+    expect(result).toEqual([123])
   })
 
   it('prefixNotation - Number - Min/Max', () => {
@@ -111,10 +113,10 @@ describe('prefix-notation', () => {
     const html = `{ "min": -1.0e+28, "max": 1.0e+28 }`
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
-    expect(result).toEqual({ "min": -1.0e+28, "max": 1.0e+28 })
+    expect(result).toEqual([{}, "min", -1.0e+28, "max", 1.0e+28 ])
   })
 
   it('prefixNotation - Truthy Boolean', () => {
@@ -122,10 +124,10 @@ describe('prefix-notation', () => {
     const html = `true`
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
-    expect(result).toEqual(true)
+    expect(result).toEqual([true])
   })
 
   it('prefixNotation - Falsy Boolean', () => {
@@ -133,10 +135,10 @@ describe('prefix-notation', () => {
     const html = `false`
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
-    expect(result).toEqual(false)
+    expect(result).toEqual([false])
   })
 
   it('prefixNotation - null', () => {
@@ -144,9 +146,9 @@ describe('prefix-notation', () => {
     const html = `null`
 
     // When
-    const result = parser(html)
+    const result = prefixNotation(html)
 
     // Then
-    expect(result).toEqual(null)
+    expect(result).toEqual([null])
   })
 })
