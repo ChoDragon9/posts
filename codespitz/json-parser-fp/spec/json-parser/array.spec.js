@@ -1,8 +1,8 @@
 const expect = require('expect')
-const {parser} = require('../json-parser')
+const {parser} = require('../../json-parser')
 
-describe('json_parser_array', () => {
-  it('parser - Array', () => {
+describe('json-parser/array', () => {
+  it('parser', () => {
     // Given
     const html = `[]`
 
@@ -13,7 +13,7 @@ describe('json_parser_array', () => {
     expect(result).toEqual([])
   })
 
-  it('parser - Array - String', () => {
+  it('parser - String', () => {
     // Given
     const html = `["value"]`
 
@@ -24,7 +24,7 @@ describe('json_parser_array', () => {
     expect(result).toEqual(["value"])
   })
 
-  it('parser - Array - Number', () => {
+  it('parser - Number', () => {
     // Given
     const html = `[123]`
 
@@ -35,7 +35,7 @@ describe('json_parser_array', () => {
     expect(result).toEqual([123])
   })
 
-  it('parser - Array - Object', () => {
+  it('parser - Object', () => {
     // Given
     const html = `[{"key": "value"}]`
 
@@ -46,7 +46,7 @@ describe('json_parser_array', () => {
     expect(result).toEqual([{"key": "value"}])
   })
 
-  it('parser - Array - Array', () => {
+  it('parser', () => {
     // Given
     const html = `[[123]]`
 
@@ -57,7 +57,7 @@ describe('json_parser_array', () => {
     expect(result).toEqual([[123]])
   })
 
-  it('parser - Array - Truthy Boolean', () => {
+  it('parser - Truthy Boolean', () => {
     // Given
     const html = `[true]`
 
@@ -68,7 +68,7 @@ describe('json_parser_array', () => {
     expect(result).toEqual([true])
   })
 
-  it('parser - Array - Falsy Boolean', () => {
+  it('parser - Falsy Boolean', () => {
     // Given
     const html = `[false]`
 
@@ -79,7 +79,7 @@ describe('json_parser_array', () => {
     expect(result).toEqual([false])
   })
 
-  it('parser - Array - null', () => {
+  it('parser - null', () => {
     // Given
     const html = `[null]`
 
