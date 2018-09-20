@@ -11,15 +11,18 @@ const {
   trim,
   go,
 } = require('./fp')
-const { extract, extractRef } = require('./extract')
+const { extractNonRef, extractRef } = require('./extract')
 
+// input : JSON String
+// work : JSON Parsing
+// return : JSON Data
 const parser = input => {
   input = trim(input)
   const pointer = reduce(input, ({char, index, str, acc}) => {
     if (isReference(char)) {
-      acc = extractRef([acc, char])
+      acc = extractRef(acc, char)
     } else {
-      const [newIndex, val] = extract({char, index, str}) || [index]
+      const [newIndex, val] = extractNonRef({char, index, str})
       if (go(val, isUndefined, not)) {
         setValue(acc, val)
       }

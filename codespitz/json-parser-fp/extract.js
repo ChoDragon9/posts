@@ -17,19 +17,20 @@ const {
 } = require('./fp')
 
 const extractRef = dispatch(
-  ([acc, char]) => isEndRef(char) ? getBackword(acc) : undefined,
-  ([acc, char]) => {
+  (acc, char) => isEndRef(char) ? getBackword(acc) : undefined,
+  (acc, char) => {
     const val = ref(char)
     setValue(acc, val)
     return createNode({val, back: acc})
   }
 )
 
-const extract = dispatch(
+const extractNonRef = dispatch(
   ({char, index, str}) => isString(char) ? extractString(str, index) : undefined,
   ({char, index, str}) => isNumber(char) ? extractNumber(str, index) : undefined,
   ({char, index, str}) => isBoolean(char) ? extractBoolean(str, index) : undefined,
-  ({char, index}) => isNull(char) ? extractNull(index) : undefined
+  ({char, index}) => isNull(char) ? extractNull(index) : undefined,
+  ({index}) => [index]
 )
 
 const extractString = (inputStr, index) => {
@@ -79,6 +80,6 @@ const extractNull = (index) => {
 }
 
 module.exports = {
-  extract,
+  extractNonRef,
   extractRef
 }
