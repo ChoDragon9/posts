@@ -1,4 +1,4 @@
-const { isReference } = require('./helper')
+const { isReference, isEndRef, ref } = require('./helper')
 const {
   createNode,
   getValue,
@@ -8,20 +8,25 @@ const {
   reduce,
   trim
 } = require('./fp')
-const { extractRef } = require('./extract')
 const { jsonToken } = require('./json-token')
+const { getBackword } = require('./pointer')
 const parser = input => {
   input = trim(input)
-  return `${input}`
-  // const pointer = reduce(jsonToken(input), (pointer, token) => {
-  //   if (isReference(token)) {
-  //     pointer = extractRef(pointer, token)
-  //   } else {
-  //     setValue(pointer, token)
-  //   }
-  //   return pointer
-  // }, createNode({}))
-  // return getValue(pointer)
+  const pointer = reduce(jsonToken(input), (pointer, token) => {
+    if (isReference(token)) {
+      if (isEndRef(token)){
+        pointer = getBackword(pointer)
+      } else {
+        const val = ref(token)
+        setValue(pointer, val)
+        pointer = createNode({val, back: pointer})
+      }
+    } else {
+      setValue(pointer, token)
+    }
+    return pointer
+  }, createNode({}))
+  return getValue(pointer)
 }
 
 module.exports = { parser }
