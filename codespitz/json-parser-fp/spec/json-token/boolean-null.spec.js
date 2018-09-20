@@ -1,35 +1,35 @@
 const expect = require('expect')
-const {prefixNotation} = require('../../prefix-notation')
+const {jsonToken} = require('../../json-token')
 
 describe('prefix-notation/boolean-null', () => {
-  it('prefixNotation - Truthy Boolean', () => {
+  it('jsonToken - Truthy Boolean', () => {
     // Given
     const html = `true`
 
     // When
-    const result = prefixNotation(html)
+    const result = jsonToken(html)
 
     // Then
     expect(result).toEqual([true])
   })
 
-  it('prefixNotation - Falsy Boolean', () => {
+  it('jsonToken - Falsy Boolean', () => {
     // Given
     const html = `false`
 
     // When
-    const result = prefixNotation(html)
+    const result = jsonToken(html)
 
     // Then
     expect(result).toEqual([false])
   })
 
-  it('prefixNotation - null', () => {
+  it('jsonToken - null', () => {
     // Given
     const html = `null`
 
     // When
-    const result = prefixNotation(html)
+    const result = jsonToken(html)
 
     // Then
     expect(result).toEqual([null])

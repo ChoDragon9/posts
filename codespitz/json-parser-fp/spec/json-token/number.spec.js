@@ -1,8 +1,8 @@
 const expect = require('expect')
-const {prefixNotation} = require('../../prefix-notation')
+const {jsonToken} = require('../../json-token')
 
 describe('prefix-notation/number', () => {
-  it('prefixNotation', () => {
+  it('jsonToken', () => {
     // Given
     const html = `[
       0.4e006,
@@ -14,7 +14,7 @@ describe('prefix-notation/number', () => {
     ]`
 
     // When
-    const result = prefixNotation(html)
+    const result = jsonToken(html)
 
     // Then
     expect(result).toEqual([
@@ -29,23 +29,23 @@ describe('prefix-notation/number', () => {
     ])
   })
 
-  it('prefixNotation', () => {
+  it('jsonToken', () => {
     // Given
     const html = '123'
 
     // When
-    const result = prefixNotation(html)
+    const result = jsonToken(html)
 
     // Then
     expect(result).toEqual([123])
   })
 
-  it('prefixNotation - Min/Max', () => {
+  it('jsonToken - Min/Max', () => {
     // Given
     const html = `{ "min": -1.0e+28, "max": 1.0e+28 }`
 
     // When
-    const result = prefixNotation(html)
+    const result = jsonToken(html)
 
     // Then
     expect(result).toEqual(['{', "min", -1.0e+28, "max", 1.0e+28, '}'])

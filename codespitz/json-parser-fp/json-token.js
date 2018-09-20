@@ -2,9 +2,9 @@ const {
   step,
   go,
   not,
-  isUndefined,
-  isReference
+  isUndefined
 } = require('./fp')
+const {isReference} = require('./helper')
 const { extractNonRef } = require('./extract')
 
 const jsonToken = input => {

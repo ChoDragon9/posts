@@ -6,29 +6,19 @@ const {
 } = require('./pointer')
 const {
   reduce,
-  not,
-  isUndefined,
-  trim,
-  go,
+  trim
 } = require('./fp')
-const { extractNonRef, extractRef } = require('./extract')
-
-// input : JSON String
-// work : JSON Parsing
-// return : JSON Data
+const { extractRef } = require('./extract')
+const { jsonToken } = require('./json-token')
 const parser = input => {
   input = trim(input)
-  const pointer = reduce(input, ({char, index, str, acc}) => {
-    if (isReference(char)) {
-      acc = extractRef(acc, char)
+  const pointer = reduce(jsonToken(input), (pointer, token) => {
+    if (isReference(token)) {
+      pointer = extractRef(pointer, token)
     } else {
-      const [newIndex, val] = extractNonRef({char, index, str})
-      if (go(val, isUndefined, not)) {
-        setValue(acc, val)
-      }
-      return [acc, newIndex + 1]
+      setValue(pointer, token)
     }
-    return [acc]
+    return pointer
   }, createNode({}))
   return getValue(pointer)
 }

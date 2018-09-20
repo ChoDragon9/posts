@@ -24,28 +24,11 @@ const step = (str, pred) => {
   }
 }
 
-const reduce = (str, iter, init) => {
-  if (not(isString(str))) {
-    return
+const reduce = (arr, iter, init) => {
+  for (const item of arr) {
+    init = iter(init, item)
   }
-  let index = 0
-  const len = str.length
-  let acc = init
-  while (index < len) {
-    const char = str[index]
-    const [newAcc, nextStep] = iter({char, index, str, acc})
-    acc = newAcc
-    if (not(isUndefined(nextStep))) {
-      if (nextStep < index) {
-        break
-      } else {
-        index = nextStep
-      }
-    } else {
-      index++
-    }
-  }
-  return acc
+  return init
 }
 
 const dispatch = (...fns) => {
