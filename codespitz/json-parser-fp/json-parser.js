@@ -30,19 +30,25 @@ const parser = input => {
           setValue(pointer, val)
         }
       )
-        (dispatch(
+        (go(input[cursor], dispatch(
           alt(isString, () => parseString(input, cursor)),
           alt(isNumber, () => parseNumber(input, cursor)),
           alt(isBoolean, () => parseBoolean(input, cursor)),
           alt(isNull, () => parseNull(cursor)),
           () => [cursor, undefined]
-        )(input[cursor]))
+        )))
     }
     i = cursor + 1
   }
   return getValue(pointer)
 }
 
+const go = (val, ...fns) => {
+  for (const fn of fns) {
+    val = fn(val)
+  }
+  return val
+}
 const alt = (fn1, fn2) => val => (fn1(val) ? fn2(val) : undefined)
 const dispatch = (...fns) => (...args) => {
   for (const fn of fns) {
