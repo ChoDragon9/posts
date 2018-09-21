@@ -12,17 +12,25 @@ const {
   getValue,
   setValue
 } = require('./pointer')
+const {go, alt, dispatch, step} = require('./fp')
 
 const parser = input => {
   input = input.trim()
-  let i = 0
-  const j = input.length
   let pointer = createNode({})
-  while (i < j) {
-    let cursor = i
-    if (isReference(input[cursor])) {
-      pointer = parseReference(input[cursor], pointer)
-    } else {
+  step(input, (char, index, input) => {
+    let cursor = index
+    go(
+      go(input[cursor], dispatch(
+        alt(isReference, v => {
+          pointer = parseReference(v, pointer)
+          return [cursor]
+        }),
+        alt(isString, () => parseString(input, cursor)),
+        alt(isNumber, () => parseNumber(input, cursor)),
+        alt(isBoolean, () => parseBoolean(input, cursor)),
+        alt(isNull, () => parseNull(cursor)),
+        () => [cursor, undefined]
+      )),
       alt(
         ([, val]) => (typeof val !== 'undefined'),
         ([newCursor, val]) => {
@@ -30,33 +38,10 @@ const parser = input => {
           setValue(pointer, val)
         }
       )
-        (go(input[cursor], dispatch(
-          alt(isString, () => parseString(input, cursor)),
-          alt(isNumber, () => parseNumber(input, cursor)),
-          alt(isBoolean, () => parseBoolean(input, cursor)),
-          alt(isNull, () => parseNull(cursor)),
-          () => [cursor, undefined]
-        )))
-    }
-    i = cursor + 1
-  }
+    )
+    return cursor + 1
+  })
   return getValue(pointer)
-}
-
-const go = (val, ...fns) => {
-  for (const fn of fns) {
-    val = fn(val)
-  }
-  return val
-}
-const alt = (fn1, fn2) => val => (fn1(val) ? fn2(val) : undefined)
-const dispatch = (...fns) => (...args) => {
-  for (const fn of fns) {
-    const result = fn(...args)
-    if (typeof result !== 'undefined') {
-      return result
-    }
-  }
 }
 
 const parseString = (input, cursor) => {
