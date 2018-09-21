@@ -4,29 +4,32 @@ const _ = require('./fp')
 const parser = input => {
   let pointer = node()
   _.step(_.trim(input), (char, index, input) => {
-    const {newPointer, cursor} = _.dispatch(
-      _.match(isReference, parseReference),
-      _.match(isString, parseString),
-      _.match(isNumber, parseNumber),
-      _.match(isBoolean, parseBoolean),
-      _.match(isNull, parseNull),
-      ({index, pointer}) => ({newPointer: pointer, cursor: index})
-    )({input, index, pointer})
+    const {newPointer, cursor} = _.go(
+      {char, input, index, pointer},
+      _.dispatch(
+        _.match(isReference, parseReference),
+        _.match(isString, parseString),
+        _.match(isNumber, parseNumber),
+        _.match(isBoolean, parseBoolean),
+        _.match(isNull, parseNull),
+        ({index, pointer}) => ({newPointer: pointer, cursor: index})
+      )
+    )
     pointer = newPointer
     return cursor + 1
   })
   return getValue(pointer)
 }
 
-const isString = ({input, index}) => _.same(`"`)(input[index])
-const isObject = ({input, index}) => _.alt(_.same('{'), _.same('}'))(input[index])
-const isArray = ({input, index}) => _.alt(_.same('['), _.same(']'))(input[index])
-const isReference = ({input, index}) => _.alt(isObject, isArray)({input, index})
-const isNumber = ({input, index}) => _.alt(_.same('-'), v => parseFloat(v) > -1)(input[index])
-const isBoolean = ({input, index}) => _.alt(_.same('t'), _.same('f'))(input[index])
-const isNull = ({input, index}) => _.same('n')(input[index])
+const isString = ({char}) => _.same(`"`)(char)
+const isObject = ({char}) => _.alt(_.same('{'), _.same('}'))(char)
+const isArray = ({char}) => _.alt(_.same('['), _.same(']'))(char)
+const isReference = ({char}) => _.alt(isObject, isArray)({char})
+const isNumber = ({char}) => _.alt(_.same('-'), v => parseFloat(v) > -1)(char)
+const isBoolean = ({char}) => _.alt(_.same('t'), _.same('f'))(char)
+const isNull = ({char}) => _.same('n')(char)
 
-const parseReference = ({input, index, pointer}) => {
+const parseReference = ({char, input, index, pointer}) => {
   const newPointer = _.dispatch(
     _.match(
       _.alt(_.same('}'), _.same(']')),
@@ -40,7 +43,7 @@ const parseReference = ({input, index, pointer}) => {
       setValue(pointer, val)
       return node(val, pointer)
     }
-  )(input[index])
+  )(char)
   return {newPointer, cursor: index}
 }
 
@@ -70,8 +73,8 @@ const findEndNumber = (input, cursor) => {
   )([`,`, `]`, `}`])
 }
 
-const parseBoolean = ({input, index, pointer}) => {
-  const isTrue = _.same(input[index])('t')
+const parseBoolean = ({char, input, index, pointer}) => {
+  const isTrue = _.same(char)('t')
   setValue(pointer, isTrue ? true : false)
   return {
     newPointer: pointer,
