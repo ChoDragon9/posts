@@ -5,8 +5,8 @@ const parser = input => {
   const length = input.length
   const stack = new Stack()
   while (index < length) {
+    const char = input[index]
     let cursor = index
-    const char = input[cursor]
     switch (true) {
       case isObject(char):
         parseObject(char, stack)
