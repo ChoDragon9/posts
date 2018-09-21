@@ -19,25 +19,30 @@ const parser = input => {
   let pointer = createNode({})
   _.step(input, (char, index, input) => {
     let cursor = index
-    _.go(
-      _.go(input[cursor], _.dispatch(
-        _.bmatch(isReference, v => {
-          pointer = parseReference(v, pointer)
-          return [cursor]
-        }),
-        _.bmatch(isString, () => parseString(input, cursor)),
-        _.bmatch(isNumber, () => parseNumber(input, cursor)),
-        _.bmatch(isBoolean, () => parseBoolean(input, cursor)),
-        _.bmatch(isNull, () => parseNull(cursor)),
-        () => [cursor, undefined]
-      )),
-      _.bmatch(
-        ([, val]) => _.go(val, _.isUndefined, _.not),
-        ([newCursor, val]) => {
-          cursor = newCursor
-          setValue(pointer, val)
-        }
-      )
+    _.go(input[cursor], _.dispatch(
+      _.bmatch(isReference, v => {
+        pointer = parseReference(v, pointer)
+        return [cursor]
+      }),
+      v => {
+        _.go(
+          _.go(v, _.dispatch(
+            _.bmatch(isString, () => parseString(input, cursor)),
+            _.bmatch(isNumber, () => parseNumber(input, cursor)),
+            _.bmatch(isBoolean, () => parseBoolean(input, cursor)),
+            _.bmatch(isNull, () => parseNull(cursor)),
+            () => [cursor, undefined]
+          )),
+          _.bmatch(
+            ([, val]) => _.go(val, _.isUndefined, _.not),
+            ([newCursor, val]) => {
+              cursor = newCursor
+              setValue(pointer, val)
+            }
+          )
+        )
+      }
+    ))
     )
     return cursor + 1
   })
@@ -96,6 +101,7 @@ const parseReference = (cursorStr, pointer) => {
   } else {
     newPointer = getBackword(pointer)
   }
+
   return newPointer
 }
 
