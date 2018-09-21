@@ -2,6 +2,7 @@ const isUndefined = v => typeof v === 'undefined'
 const isString = v => typeof v === 'string'
 const not = v => !v
 const trim = v => v.trim()
+const identity = v => v
 
 const step = (str, pred) => {
   if (not(isString(str))) {
@@ -50,5 +51,6 @@ module.exports = {
   isString,
   not,
   trim,
-  step
+  step,
+  identity
 }

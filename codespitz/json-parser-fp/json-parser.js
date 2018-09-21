@@ -18,7 +18,8 @@ const {
   dispatch,
   step,
   isUndefined,
-  not
+  not,
+  identity
 } = require('./fp')
 
 const parser = input => {
@@ -79,7 +80,8 @@ const findEndNumber = (input, cursor) => {
   const commaIdx = input.indexOf(`,`, nextCursor)
   const arrIdx = input.indexOf(`]`, nextCursor)
   const objIdx = input.indexOf(`}`, nextCursor)
-  const nearCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(v => v > -1))
+  const nearCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(identity))
+
   return nearCursor
 }
 
