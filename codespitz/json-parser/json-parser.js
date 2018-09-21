@@ -7,23 +7,25 @@ const parser = input => {
   while (index < length) {
     let cursor = index
     const cursorStr = input[cursor]
-    if (isReference(cursorStr)) {
-      parseReference(cursorStr, stack)
-    } else {
-      switch (true) {
-        case isString(cursorStr):
-          cursor = parseString(input, cursor, stack)
-          break;
-        case isNumber(cursorStr):
-          cursor = parseNumber(input, cursor, stack)
-          break;
-        case isBoolean(cursorStr):
-          cursor = parseBoolean(input, cursor, stack)
-          break;
-        case isNull(cursorStr):
-          cursor = parseNull(cursor, stack)
-          break;
-      }
+    switch (true) {
+      case isObject(cursorStr):
+        parseObject(cursorStr, stack)
+        break
+      case isArray(cursorStr):
+        parseArray(cursorStr, stack)
+        break
+      case isString(cursorStr):
+        cursor = parseString(input, cursor, stack)
+        break
+      case isNumber(cursorStr):
+        cursor = parseNumber(input, cursor, stack)
+        break
+      case isBoolean(cursorStr):
+        cursor = parseBoolean(input, cursor, stack)
+        break
+      case isNull(cursorStr):
+        cursor = parseNull(cursor, stack)
+        break
     }
     index = cursor + 1
   }
@@ -32,19 +34,17 @@ const parser = input => {
 
 const isObject = v => v === `{` || v === `}`
 const isArray = v => v === `[` || v === `]`
-const isReference = v => isObject(v) || isArray(v)
 const isString = v => v === `"`
 const isNumber = v => v === '-' || parseFloat(v) > -1
 const isBoolean = v => v === 't' || v === 'f'
 const isNull = v => v === 'n'
 
-const parseReference = (cursorStr, stack) => {
-  const delimiter = isObject(cursorStr) ? `{` : `[`
-  if (cursorStr === delimiter) {
-    stack.forword(isObject(cursorStr) ? {} : [])
-  } else {
-    stack.backword()
-  }
+const parseObject = (cursorStr, stack) => {
+  cursorStr === `{` ? stack.forword({}) : stack.backword()
+}
+
+const parseArray = (cursorStr, stack) => {
+  cursorStr === `[` ? stack.forword([]) : stack.backword()
 }
 
 const parseString = (input, cursor, stack) => {
