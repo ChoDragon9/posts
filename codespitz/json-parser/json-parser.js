@@ -1,7 +1,6 @@
 const Stack = require('./stack')
 
 const parser = input => {
-  input = input.trim()
   let i = 0
   const j = input.length
   const stack = new Stack()
