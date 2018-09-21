@@ -3,8 +3,7 @@ const _ = require('./fp')
 
 const parser = input => {
   let pointer = node()
-  input = _.trim(input)
-  _.step(input, (char, index, input) => {
+  _.step(_.trim(input), (char, index, input) => {
     const {newPointer, cursor} = _.dispatch(
       _.bmatch(isReference, parseReference),
       _.bmatch(isString, parseString),
