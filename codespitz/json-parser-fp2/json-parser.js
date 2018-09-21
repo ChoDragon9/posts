@@ -5,11 +5,11 @@ const parser = input => {
   let pointer = node()
   _.step(_.trim(input), (char, index, input) => {
     const {newPointer, cursor} = _.dispatch(
-      _.bmatch(isReference, parseReference),
-      _.bmatch(isString, parseString),
-      _.bmatch(isNumber, parseNumber),
-      _.bmatch(isBoolean, parseBoolean),
-      _.bmatch(isNull, parseNull),
+      _.match(isReference, parseReference),
+      _.match(isString, parseString),
+      _.match(isNumber, parseNumber),
+      _.match(isBoolean, parseBoolean),
+      _.match(isNull, parseNull),
       ({index, pointer}) => ({newPointer: pointer, cursor: index})
     )({input, index, pointer})
     pointer = newPointer
@@ -28,14 +28,14 @@ const isNull = ({input, index}) => _.same('n')(input[index])
 
 const parseReference = ({input, index, pointer}) => {
   const newPointer = _.dispatch(
-    _.bmatch(
+    _.match(
       _.alt(_.same('}'), _.same(']')),
       _ => getBackword(pointer)
     ),
     v => {
       const val = _.dispatch(
-        _.bmatch(_.same('{'), _.always({})),
-        _.bmatch(_.same('['), _.always([])),
+        _.match(_.same('{'), _.always({})),
+        _.match(_.same('['), _.always([])),
       )(v)
       setValue(pointer, val)
       return node(val, pointer)
@@ -45,24 +45,19 @@ const parseReference = ({input, index, pointer}) => {
 }
 
 const parseString = ({input, index, pointer}) => {
-  const cursor = findEndString(input, index)
-  const str = input.substring(index + 1, cursor)
-  setValue(pointer, str)
-  return {newPointer: pointer, cursor}
-}
-
-const findEndString = (input, cursor) => {
   let end = false
+  let cursor = index
   while (_.not(end)) {
     cursor = input.indexOf(`"`, cursor + 1)
     end = _.go(input[cursor - 1], _.same(`\\`), _.not)
   }
-  return cursor
+  setValue(pointer, _.substr(input, index + 1, cursor))
+  return {newPointer: pointer, cursor}
 }
 
 const parseNumber = ({input, index, pointer}) => {
   const cursor = findEndNumber(input, index)
-  const num = parseFloat(input.substring(index, cursor))
+  const num = parseFloat(_.substr(input, index, cursor))
   setValue(pointer, num)
   return {newPointer: pointer, cursor: cursor - 1}
 }

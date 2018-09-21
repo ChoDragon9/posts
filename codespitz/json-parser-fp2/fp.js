@@ -15,6 +15,7 @@ const min = arr => Math.min(...arr)
 const max = arr => Math.max(...arr)
 
 const strTrim = str => str.trim()
+const substr = (str, start, end) => str.substring(start, end)
 
 const step = (str, pred) => {
   if (go(str, isString, not)) {
@@ -52,7 +53,7 @@ const pipe = (...fns) => val => {
 }
 
 const alt = (fn1, fn2) => val => fn1(val) || fn2(val)
-const bmatch = (fn1, fn2) => val => (fn1(val) ? fn2(val) : undefined)
+const match = (fn1, fn2) => val => (fn1(val) ? fn2(val) : undefined)
 
 const dispatch = (...fns) => (...args) => {
   for (const fn of fns) {
@@ -72,7 +73,7 @@ module.exports = {
   not,
   trim: strTrim,
   step,
-  bmatch,
+  match,
   identity,
   fork,
   map,
@@ -82,5 +83,6 @@ module.exports = {
   pipe,
   trim,
   always,
-  same
+  same,
+  substr
 }
