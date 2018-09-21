@@ -45,7 +45,7 @@ const isNull = _.same('n')
 
 const parseReference = (cursorStr, pointer) => {
   return _.dispatch(
-    _.bmatch(_.alt(_.same('}'), _.same(']')), _ => getBackword(pointer)),
+    _.bmatch(_.alt(_.same('}'), _.same(']')), _.always(getBackword(pointer))),
     v => {
       const val = _.dispatch(
         _.bmatch(_.same('{'), _.always({})),
