@@ -4,15 +4,13 @@ const {
   getValue,
   setValue
 } = require('./pointer')
-const {
-  reduce,
-  trim
-} = require('./fp')
+const { trim } = require('./fp')
 const { jsonToken } = require('./json-token')
 const { getBackword } = require('./pointer')
 const parser = input => {
   input = trim(input)
-  const pointer = reduce(jsonToken(input), (pointer, token) => {
+  let pointer = createNode({})
+  jsonToken(input, token => {
     if (isReference(token)) {
       if (isEndRef(token)){
         pointer = getBackword(pointer)
@@ -24,8 +22,7 @@ const parser = input => {
     } else {
       setValue(pointer, token)
     }
-    return pointer
-  }, createNode({}))
+  })
   return getValue(pointer)
 }
 
