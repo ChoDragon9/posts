@@ -3,6 +3,8 @@ const isString = v => typeof v === 'string'
 const not = v => !v
 const trim = v => v.trim()
 const identity = v => v
+const always = v => _ => v
+const same = v1 => v2 => v1 === v2
 
 const step = (str, pred) => {
   if (not(isString(str))) {
@@ -78,5 +80,7 @@ module.exports = {
   min,
   max,
   pipe,
-  trim
+  trim,
+  always,
+  same
 }
