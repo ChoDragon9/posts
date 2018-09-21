@@ -12,7 +12,7 @@ const step = (str, pred) => {
   while (index < len) {
     const char = str[index]
     const nextStep = pred({char, index, str})
-    if (not(isUndefined(nextStep))) {
+    if (go(nextStep, isUndefined, not)) {
       if (nextStep < index) {
         break
       } else {
@@ -35,7 +35,7 @@ const dispatch = (...fns) => {
   return (...args) => {
     for (let fn of fns) {
       const ret = fn(...args)
-      if (not(isUndefined(ret))) {
+      if (go(ret, isUndefined, not)) {
         return ret
       }
     }
