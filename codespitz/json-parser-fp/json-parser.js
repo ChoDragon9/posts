@@ -1,7 +1,6 @@
-const { createNode, getValue, setValue } = require('./pointer')
+const { createNode, getValue, setValue, getBackword } = require('./pointer')
 const { trim, reduce} = require('./fp')
 const { jsonToken, isReference, isEndRef, ref } = require('./json-token')
-const { getBackword } = require('./pointer')
 
 const parser = input => {
   input = trim(input)
@@ -23,5 +22,8 @@ const parser = input => {
   }, createNode({}))
   return getValue(pointer)
 }
+
+const stack = []
+
 
 module.exports = { parser }
