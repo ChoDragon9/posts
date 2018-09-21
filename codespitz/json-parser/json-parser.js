@@ -6,24 +6,24 @@ const parser = input => {
   const stack = new Stack()
   while (index < length) {
     let cursor = index
-    const cursorStr = input[cursor]
+    const char = input[cursor]
     switch (true) {
-      case isObject(cursorStr):
-        parseObject(cursorStr, stack)
+      case isObject(char):
+        parseObject(char, stack)
         break
-      case isArray(cursorStr):
-        parseArray(cursorStr, stack)
+      case isArray(char):
+        parseArray(char, stack)
         break
-      case isString(cursorStr):
+      case isString(char):
         cursor = parseString(input, cursor, stack)
         break
-      case isNumber(cursorStr):
+      case isNumber(char):
         cursor = parseNumber(input, cursor, stack)
         break
-      case isBoolean(cursorStr):
+      case isBoolean(char):
         cursor = parseBoolean(input, cursor, stack)
         break
-      case isNull(cursorStr):
+      case isNull(char):
         cursor = parseNull(cursor, stack)
         break
     }
