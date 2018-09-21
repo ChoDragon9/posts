@@ -1,4 +1,4 @@
-const createNode = ({val = null, key = null, back = null}) => ({val, key, back})
+const node = ({val = null, key = null}, back = null) => ({val, key, back})
 
 const setValue = (pointer, value) => {
   const {key, val} = pointer
@@ -22,7 +22,7 @@ const getValue = pointer => pointer.val
 const getBackword = pointer => pointer.back
 
 module.exports = {
-  createNode,
+  node,
   setValue,
   getValue,
   getBackword

@@ -1,14 +1,9 @@
-const {
-  createNode,
-  getBackword,
-  getValue,
-  setValue
-} = require('./pointer')
+const { node, getBackword, getValue, setValue } = require('./pointer')
 const _ = require('./fp')
 
 const parser = input => {
   input = input.trim()
-  let pointer = createNode({})
+  let pointer = node({})
   _.step(input, (char, index, input) => {
     let cursor = index
     _.dispatch(
@@ -52,7 +47,7 @@ const parseReference = (cursorStr, pointer) => {
         _.bmatch(_.same('['), _.always([])),
       )(v)
       setValue(pointer, val)
-      return createNode({ val, back: pointer })
+      return node({val}, pointer)
     }
   )(cursorStr)
 }
