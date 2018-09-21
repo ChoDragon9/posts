@@ -50,42 +50,36 @@ const findEndString = (input, cursor) => {
   let end = false
   while (!end) {
     cursor = input.indexOf(`"`, cursor + 1)
-    end = !input[cursor - 1] === `\\`
+    end = input[cursor - 1] !== `\\`
   }
   return cursor
 }
 
 const parseNumber = (input, cursor, stack) => {
   const nearCursor = findEndNumber(input, cursor)
-  const newCursor = nearCursor - 1
   let num = input.substring(cursor, nearCursor).trim()
   num = parseFloat(num)
   stack.setValue(num)
-  return newCursor
+  return nearCursor - 1
 }
 
 const findEndNumber = (input, cursor) => {
-  const nextCursor = cursor + 1
-  const commaIdx = input.indexOf(`,`, nextCursor)
-  const arrIdx = input.indexOf(`]`, nextCursor)
-  const objIdx = input.indexOf(`}`, nextCursor)
-  const nearCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(v => v > -1))
-  return nearCursor
+  return Math.min(
+    ...[`,`, `]`, `}`]
+      .map(v => input.indexOf(v, cursor + 1))
+      .filter(v => v > -1)
+  )
 }
 
 const parseBoolean = (input, cursor, stack) => {
   const isTrue = input[cursor] === 't'
-  const val = isTrue ? true : false
-  const newCursor = cursor + (isTrue ? 3 : 4)
-  stack.setValue(val)
-  return newCursor
+  stack.setValue(isTrue ? true : false)
+  return cursor + (isTrue ? 3 : 4)
 }
 
 const parseNull = (cursor, stack) => {
-  const val = null
-  const newCursor = cursor + 3
-  stack.setValue(val)
-  return newCursor
+  stack.setValue(null)
+  return cursor + 3
 }
 
 const parseReference = (cursorStr, stack) => {
