@@ -32,6 +32,13 @@ const go = (val, ...fns) => {
   return val
 }
 
+const pipe = (...fns) => val => {
+  for (const fn of fns) {
+    val = fn(val)
+  }
+  return val
+}
+
 const alt = (fn1, fn2) => val => fn1(val) || fn2(val)
 const bmatch = (fn1, fn2) => val => (fn1(val) ? fn2(val) : undefined)
 
@@ -52,6 +59,8 @@ const filter = iter => arr => arr.filter(iter)
 const min = arr => Math.min(...arr)
 const max = arr => Math.max(...arr)
 
+const strTrim = str => str.trim()
+
 module.exports = {
   go,
   alt,
@@ -59,7 +68,7 @@ module.exports = {
   isUndefined,
   isString,
   not,
-  trim,
+  trim: strTrim,
   step,
   bmatch,
   identity,
@@ -67,5 +76,7 @@ module.exports = {
   map,
   filter,
   min,
-  max
+  max,
+  pipe,
+  trim
 }

@@ -1,12 +1,4 @@
 const {
-  isString,
-  isObject,
-  isReference,
-  isNumber,
-  isBoolean,
-  isNull,
-} = require('./helper')
-const {
   createNode,
   getBackword,
   getValue,
@@ -19,34 +11,49 @@ const parser = input => {
   let pointer = createNode({})
   _.step(input, (char, index, input) => {
     let cursor = index
-    _.go(input[cursor], _.dispatch(
-      _.bmatch(isReference, v => {
-        pointer = parseReference(v, pointer)
-        return [cursor]
+    _.dispatch(
+      _.bmatch(isReference, cursorStr => {
+        pointer = parseReference(cursorStr, pointer)
       }),
-      v => {
-        _.go(
-          _.go(v, _.dispatch(
-            _.bmatch(isString, () => parseString(input, cursor)),
-            _.bmatch(isNumber, () => parseNumber(input, cursor)),
-            _.bmatch(isBoolean, () => parseBoolean(input, cursor)),
-            _.bmatch(isNull, () => parseNull(cursor)),
-            () => [cursor, undefined]
-          )),
-          _.bmatch(
-            ([, val]) => _.go(val, _.isUndefined, _.not),
-            ([newCursor, val]) => {
-              cursor = newCursor
-              setValue(pointer, val)
-            }
-          )
-        )
+      cursorStr => {
+        let val
+        [cursor, val] = _.dispatch(
+          _.bmatch(isString, () => parseString(input, cursor)),
+          _.bmatch(isNumber, () => parseNumber(input, cursor)),
+          _.bmatch(isBoolean, () => parseBoolean(input, cursor)),
+          _.bmatch(isNull, () => parseNull(cursor)),
+          () => [cursor, undefined]
+        )(cursorStr)
+        _.bmatch(
+          _.pipe(_.isUndefined, _.not),
+          val => setValue(pointer, val)
+        )(val)
       }
-    ))
-    )
+    )(input[cursor])
     return cursor + 1
   })
   return getValue(pointer)
+}
+
+const isString = v => v === `"`
+const isObject = v => v === `{` || v === `}`
+const isArray = v => v === `[` || v === `]`
+const isReference = _.alt(isObject, isArray)
+const isNumber = v => v === '-' || parseFloat(v) > -1
+const isBoolean = v => v === 't' || v === 'f'
+const isNull = v => v === 'n'
+
+const parseReference = (cursorStr, pointer) => {
+  let newPointer
+  const delimiter = isObject(cursorStr) ? `{` : `[`
+  if (cursorStr === delimiter) {
+    const val = isObject(cursorStr) ? {} : []
+    setValue(pointer, val)
+    newPointer = createNode({ val, back: pointer })
+  } else {
+    newPointer = getBackword(pointer)
+  }
+  return newPointer
 }
 
 const parseString = (input, cursor) => {
@@ -59,26 +66,23 @@ const findEndString = (input, cursor) => {
   let end = false
   while (_.not(end)) {
     cursor = input.indexOf(`"`, cursor + 1)
-    end = _.go(input[cursor - 1] === `\\`, _.not)
+    end = _.not(input[cursor - 1] === `\\`)
   }
   return cursor
 }
 
 const parseNumber = (input, cursor) => {
   const nearCursor = findEndNumber(input, cursor)
-  const newCursor = nearCursor - 1
-  let num = input.substring(cursor, nearCursor).trim()
-  num = parseFloat(num)
-  return [newCursor, num]
+  const num = parseFloat(input.substring(cursor, nearCursor))
+  return [nearCursor - 1, num]
 }
 
 const findEndNumber = (input, cursor) => {
-  return _.go(
-    [`,`, `]`, `}`],
+  return _.pipe(
     _.map(v => input.indexOf(v, cursor + 1)),
     _.filter(v => v > -1),
     _.min
-  )
+  )([`,`, `]`, `}`])
 }
 
 const parseBoolean = (input, cursor) => {
@@ -90,19 +94,5 @@ const parseBoolean = (input, cursor) => {
 }
 
 const parseNull = cursor => [cursor + 3, null]
-
-const parseReference = (cursorStr, pointer) => {
-  let newPointer
-  const delimiter = isObject(cursorStr) ? `{` : `[`
-  if (cursorStr === delimiter) {
-    const val = isObject(cursorStr) ? {} : []
-    setValue(pointer, val)
-    newPointer = createNode({ val, back: pointer })
-  } else {
-    newPointer = getBackword(pointer)
-  }
-
-  return newPointer
-}
 
 module.exports = { parser }
