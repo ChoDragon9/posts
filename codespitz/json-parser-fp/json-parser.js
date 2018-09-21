@@ -24,16 +24,17 @@ const parser = input => {
       pointer = parseReference(input[cursor], pointer)
     } else {
       let val
-      [cursor, val] = dispatch(
-        alt(isString, () => parseString(input, cursor)),
-        alt(isNumber, () => parseNumber(input, cursor)),
-        alt(isBoolean, () => parseBoolean(input, cursor)),
-        alt(isNull, () => parseNull(cursor)),
-        () => [cursor, undefined]
-      )(input[cursor])
-      if (typeof val !== 'undefined') {
-        setValue(pointer, val)
-      }
+      alt(
+        ([, val]) => (typeof val !== 'undefined'),
+        () => setValue(pointer, val)
+      )
+        (dispatch(
+          alt(isString, () => parseString(input, cursor)),
+          alt(isNumber, () => parseNumber(input, cursor)),
+          alt(isBoolean, () => parseBoolean(input, cursor)),
+          alt(isNull, () => parseNull(cursor)),
+          () => [cursor, undefined]
+        )(input[cursor]))
     }
     i = cursor + 1
   }
