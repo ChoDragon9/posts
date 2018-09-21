@@ -6,8 +6,8 @@ const { getBackword } = require('./pointer')
 const parser = input => {
   input = trim(input)
   const tokens = []
-  jsonToken(input, token => tokens.push(token)
-  pointer = reduce(tokens, (pointer, token) => {
+  jsonToken(input, token => tokens.push(token))
+  const pointer = reduce(tokens, (pointer, token) => {
     if (isReference(token)) {
       if (isEndRef(token)){
         pointer = getBackword(pointer)
