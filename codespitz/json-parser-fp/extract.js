@@ -1,13 +1,5 @@
-const {
-  isString,
-  isNumber,
-  isBoolean,
-  isNull
-} = require('./helper')
-const {
-  trim,
-  dispatch
-} = require('./fp')
+const { isString, isNumber, isBoolean, isNull } = require('./json-token')
+const { trim, dispatch } = require('./fp')
 
 const extractNonRef = dispatch(
   ({char, index, str}) => isString(char) ? extractString(str, index) : undefined,

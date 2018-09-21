@@ -1,7 +1,6 @@
-const { isReference, isEndRef, ref } = require('./helper')
 const { createNode, getValue, setValue } = require('./pointer')
 const { trim } = require('./fp')
-const { jsonToken } = require('./json-token')
+const { jsonToken, isReference, isEndRef, ref } = require('./json-token')
 const { getBackword } = require('./pointer')
 
 const parser = input => {
