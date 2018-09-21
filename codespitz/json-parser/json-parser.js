@@ -39,12 +39,12 @@ const isNumber = v => v === '-' || parseFloat(v) > -1
 const isBoolean = v => v === 't' || v === 'f'
 const isNull = v => v === 'n'
 
-const parseObject = (cursorStr, stack) => {
-  cursorStr === `{` ? stack.forword({}) : stack.backword()
+const parseObject = (char, stack) => {
+  char === `{` ? stack.forword({}) : stack.backword()
 }
 
-const parseArray = (cursorStr, stack) => {
-  cursorStr === `[` ? stack.forword([]) : stack.backword()
+const parseArray = (char, stack) => {
+  char === `[` ? stack.forword([]) : stack.backword()
 }
 
 const parseString = (input, cursor, stack) => {
