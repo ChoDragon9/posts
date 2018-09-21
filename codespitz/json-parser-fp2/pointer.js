@@ -1,4 +1,4 @@
-const node = ({val = null, key = null}, back = null) => ({val, key, back})
+const node = (val = null, back = null) => ({val, back, key: null})
 
 const setValue = (pointer, value) => {
   const {key, val} = pointer
