@@ -47,14 +47,13 @@ const parseString = (input, cursor, stack) => {
 }
 
 const findEndString = (input, cursor) => {
-  let newCursor = findString(input, cursor)
-  while (input[newCursor - 1] === `\\`) {
-    newCursor = findString(input, newCursor)
+  let end = false
+  while (!end) {
+    cursor = input.indexOf(`"`, cursor + 1)
+    end = !input[cursor - 1] === `\\`
   }
-  return newCursor
+  return cursor
 }
-
-const findString = (input, cursor) => input.indexOf(`"`, cursor + 1)
 
 const parseNumber = (input, cursor, stack) => {
   const nearCursor = findEndNumber(input, cursor)
