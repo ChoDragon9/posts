@@ -2,7 +2,7 @@ const { node, getBackword, getValue, setValue } = require('./pointer')
 const _ = require('./fp')
 
 const parser = input => {
-  input = input.trim()
+  input = trim(iput)
   let pointer = node({})
   _.step(input, (char, index, input) => {
     let cursor = index
