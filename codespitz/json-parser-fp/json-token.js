@@ -1,9 +1,4 @@
-const {
-  step,
-  go,
-  not,
-  isUndefined
-} = require('./fp')
+const { step, go, not, isUndefined } = require('./fp')
 const {isReference} = require('./helper')
 const { extractNonRef } = require('./extract')
 
