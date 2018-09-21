@@ -84,15 +84,14 @@ const findEndNumber = (input, cursor) => {
 
 const parseBoolean = (input, cursor) => {
   const isTrue = input[cursor] === 't'
-  const val = isTrue ? true : false
-  const newCursor = cursor + (isTrue ? 3 : 4)
-  return [newCursor, val]
+  return [
+    cursor + (isTrue ? 3 : 4),
+    isTrue ? true : false
+  ]
 }
 
 const parseNull = (cursor) => {
-  const val = null
-  const newCursor = cursor + 3
-  return [newCursor, val]
+  return [cursor + 3, null]
 }
 
 const parseReference = (cursorStr, pointer) => {
