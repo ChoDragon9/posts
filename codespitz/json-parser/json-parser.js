@@ -1,28 +1,15 @@
-const {
-  isString,
-  isObject,
-  isReference,
-  isNumber,
-  isBoolean,
-  isNull,
-} = require('./helper')
-const {
-  createNode,
-  getBackword,
-  getValue,
-  setValue
-} = require('./pointer')
+const Stack = require('./stack')
 
 const parser = input => {
   input = input.trim()
   let i = 0
   const j = input.length
-  let pointer = createNode({})
+  const stack = new Stack()
   while (i < j) {
     let cursor = i
     const cursorStr = input[cursor]
     if (isReference(cursorStr)) {
-      pointer = parseReference(cursorStr, pointer)
+      parseReference(cursorStr, stack)
     } else {
       let val
       switch (true) {
@@ -40,13 +27,21 @@ const parser = input => {
           break;
       }
       if (typeof val !== 'undefined') {
-        setValue(pointer, val)
+        stack.setValue(val)
       }
     }
     i = cursor + 1
   }
-  return getValue(pointer)
+  return stack.getValue()
 }
+
+const isString = v => v === `"`
+const isObject = v => v === `{` || v === `}`
+const isArray = v => v === `[` || v === `]`
+const isReference = v => isObject(v) || isArray(v)
+const isNumber = v => v === '-' || parseFloat(v) > -1
+const isBoolean = v => v === 't' || v === 'f'
+const isNull = v => v === 'n'
 
 const parseString = (input, cursor) => {
   const newCursor = findEndString(input, cursor)
@@ -94,17 +89,13 @@ const parseNull = (cursor) => {
   return [newCursor, val]
 }
 
-const parseReference = (cursorStr, pointer) => {
-  let newPointer
+const parseReference = (cursorStr, stack) => {
   const delimiter = isObject(cursorStr) ? `{` : `[`
   if (cursorStr === delimiter) {
-    const val = isObject(cursorStr) ? {} : []
-    setValue(pointer, val)
-    newPointer = createNode({ val, back: pointer })
+    stack.forword(isObject(cursorStr) ? {} : [])
   } else {
-    newPointer = getBackword(pointer)
+    stack.backword()
   }
-  return newPointer
 }
 
 module.exports = { parser }
