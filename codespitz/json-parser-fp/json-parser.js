@@ -69,9 +69,10 @@ const parseNumber = (input, cursor) => {
 
 const findEndNumber = (input, cursor) => {
   return _.go(
-    _.map([`,`, `]`, `}`], v => input.indexOf(v, cursor + 1)),
-    v => _.filter(v, v => v > -1),
-    args =>  Math.min(...args)
+    [`,`, `]`, `}`],
+    _.map(v => input.indexOf(v, cursor + 1)),
+    _.filter(v => v > -1),
+    _.min
   )
 }
 

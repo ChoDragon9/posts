@@ -46,8 +46,11 @@ const dispatch = (...fns) => (...args) => {
 
 const fork = (join, fn1, fn2) => val => join(fn1(val), fn2(val))
 
-const map = (arr, iter) => arr.map(iter)
-const filter = (arr, iter) => arr.filter(iter)
+const map = iter => arr => arr.map(iter)
+const filter = iter => arr => arr.filter(iter)
+
+const min = arr => Math.min(...arr)
+const max = arr => Math.max(...arr)
 
 module.exports = {
   go,
@@ -62,5 +65,7 @@ module.exports = {
   identity,
   fork,
   map,
-  filter
+  filter,
+  min,
+  max
 }
