@@ -9,7 +9,7 @@ const parser = input => {
     let cursor = i
     const cursorStr = input[cursor]
     if (isReference(cursorStr)) {
-      parseReference(input, cursor, stack)
+      parseReference(cursorStr, stack)
     } else {
       switch (true) {
         case isString(cursorStr):
