@@ -26,7 +26,7 @@ const isNumber = ({char}) => _.alt(_.same('-'), v => parseFloat(v) > -1)(char)
 const isBoolean = ({char}) => _.alt(_.same('t'), _.same('f'))(char)
 const isNull = ({char}) => _.same('n')(char)
 
-const parseObject = ({char, input, index, stack}) => {
+const parseObject = ({char, index, stack}) => {
   _.switchCase(char)
   (
     _.match(_.same('}'), _ => stack.backword()),
@@ -35,7 +35,7 @@ const parseObject = ({char, input, index, stack}) => {
   return index
 }
 
-const parseArray = ({char, input, index, stack}) => {
+const parseArray = ({char, index, stack}) => {
   _.switchCase(char)
   (
     _.match(_.same(']'), _ => stack.backword()),
@@ -61,17 +61,18 @@ const parseNumber = ({input, index, stack}) => {
     _.filter(v => v > -1),
     _.min
   )([`,`, `]`, `}`])
-  _.go(_.substr(input, index, cursor), parseFloat, stack.setValue)
+  const num = parseFloat(_.substr(input, index, cursor))
+  stack.setValue(num)
   return cursor - 1
 }
 
-const parseBoolean = ({char, input, index, stack}) => {
+const parseBoolean = ({char, index, stack}) => {
   const isTrue = _.same(char)('t')
   stack.setValue(isTrue ? true : false)
   return index + (isTrue ? 3 : 4)
 }
 
-const parseNull = ({input, index, stack}) => {
+const parseNull = ({index, stack}) => {
   stack.setValue(null)
   return index + 3
 }
