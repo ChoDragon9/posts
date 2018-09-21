@@ -29,6 +29,14 @@ const parser = input => {
   })
   return getValue(pointer)
 }
+//
+// _.dispatch([input, cursor, pointer],
+//   _.match(isReference, parseReference),
+//   _.match(isString, parseString),
+//   _.match(isNumber, parseNumber),
+//   _.match(isBoolean, parseBoolean),
+//   _.match(isNull, parseNull)
+// )
 
 const isString = _.same(`"`)
 const isObject = _.alt(_.same('{'), _.same('}'))
