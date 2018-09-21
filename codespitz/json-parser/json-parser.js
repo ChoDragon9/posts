@@ -1,11 +1,11 @@
 const Stack = require('./stack')
 
 const parser = input => {
-  let i = 0
-  const j = input.length
+  let index = 0
+  const length = input.length
   const stack = new Stack()
-  while (i < j) {
-    let cursor = i
+  while (index < length) {
+    let cursor = index
     const cursorStr = input[cursor]
     if (isReference(cursorStr)) {
       parseReference(cursorStr, stack)
@@ -25,7 +25,7 @@ const parser = input => {
           break;
       }
     }
-    i = cursor + 1
+    index = cursor + 1
   }
   return stack.getValue()
 }
