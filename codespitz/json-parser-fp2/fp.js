@@ -55,7 +55,7 @@ const pipe = (...fns) => val => {
 const alt = (fn1, fn2) => val => fn1(val) || fn2(val)
 const match = (fn1, fn2) => val => (fn1(val) ? fn2(val) : undefined)
 
-const switchcase = (...args) => (...fns) => {
+const switchCase = (...args) => (...fns) => {
   for (const fn of fns) {
     const result = fn(...args)
     if (go(result, isUndefined, not)) {
@@ -67,7 +67,7 @@ const switchcase = (...args) => (...fns) => {
 module.exports = {
   go,
   alt,
-  switchcase,
+  switchCase,
   isUndefined,
   isString,
   not,
