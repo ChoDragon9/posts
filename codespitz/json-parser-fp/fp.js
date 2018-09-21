@@ -32,7 +32,8 @@ const go = (val, ...fns) => {
   return val
 }
 
-const alt = (fn1, fn2) => val => (fn1(val) ? fn2(val) : undefined)
+const alt = (fn1, fn2) => val => fn1(val) || fn2(val)
+const bmatch = (fn1, fn2) => val => (fn1(val) ? fn2(val) : undefined)
 
 const dispatch = (...fns) => (...args) => {
   for (const fn of fns) {
@@ -43,6 +44,11 @@ const dispatch = (...fns) => (...args) => {
   }
 }
 
+const fork = (join, fn1, fn2) => val => join(fn1(val), fn2(val))
+
+const map = (arr, iter) => arr.map(iter)
+const filter = (arr, iter) => arr.filter(iter)
+
 module.exports = {
   go,
   alt,
@@ -52,5 +58,9 @@ module.exports = {
   not,
   trim,
   step,
-  identity
+  bmatch,
+  identity,
+  fork,
+  map,
+  filter
 }

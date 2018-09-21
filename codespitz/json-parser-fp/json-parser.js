@@ -12,34 +12,27 @@ const {
   getValue,
   setValue
 } = require('./pointer')
-const {
-  go,
-  alt,
-  dispatch,
-  step,
-  isUndefined,
-  not
-} = require('./fp')
+const _ = require('./fp')
 
 const parser = input => {
   input = input.trim()
   let pointer = createNode({})
-  step(input, (char, index, input) => {
+  _.step(input, (char, index, input) => {
     let cursor = index
-    go(
-      go(input[cursor], dispatch(
-        alt(isReference, v => {
+    _.go(
+      _.go(input[cursor], _.dispatch(
+        _.bmatch(isReference, v => {
           pointer = parseReference(v, pointer)
           return [cursor]
         }),
-        alt(isString, () => parseString(input, cursor)),
-        alt(isNumber, () => parseNumber(input, cursor)),
-        alt(isBoolean, v => parseBoolean(v)),
-        alt(isNull, () => parseNull(cursor)),
+        _.bmatch(isString, () => parseString(input, cursor)),
+        _.bmatch(isNumber, () => parseNumber(input, cursor)),
+        _.bmatch(isBoolean, () => parseBoolean(input, cursor)),
+        _.bmatch(isNull, () => parseNull(cursor)),
         () => [cursor, undefined]
       )),
-      alt(
-        ([, val]) => go(val, isUndefined, not),
+      _.bmatch(
+        ([, val]) => _.go(val, _.isUndefined, _.not),
         ([newCursor, val]) => {
           cursor = newCursor
           setValue(pointer, val)
@@ -59,9 +52,9 @@ const parseString = (input, cursor) => {
 
 const findEndString = (input, cursor) => {
   let end = false
-  while (not(end)) {
+  while (_.not(end)) {
     cursor = input.indexOf(`"`, cursor + 1)
-    end = go(input[cursor - 1] === `\\`, not)
+    end = _.go(input[cursor - 1] === `\\`, _.not)
   }
   return cursor
 }
@@ -75,24 +68,22 @@ const parseNumber = (input, cursor) => {
 }
 
 const findEndNumber = (input, cursor) => {
-  return go(
-    [`,`, `]`, `}`].map(v => input.indexOf(v, cursor + 1)),
-    v => v.filter(v => v > -1),
+  return _.go(
+    _.map([`,`, `]`, `}`], v => input.indexOf(v, cursor + 1)),
+    v => _.filter(v, v => v > -1),
     args =>  Math.min(...args)
   )
 }
 
-const parseBoolean = (str) => {
-  const isTrue = str === 't'
+const parseBoolean = (input, cursor) => {
+  const isTrue = input[cursor] === 't'
   return [
     cursor + (isTrue ? 3 : 4),
     isTrue ? true : false
   ]
 }
 
-const parseNull = (cursor) => {
-  return [cursor + 3, null]
-}
+const parseNull = cursor => [cursor + 3, null]
 
 const parseReference = (cursorStr, pointer) => {
   let newPointer
