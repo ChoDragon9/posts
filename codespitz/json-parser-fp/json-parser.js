@@ -20,25 +20,17 @@ const parser = input => {
   let pointer = createNode({})
   while (i < j) {
     let cursor = i
-    const cursorStr = input[cursor]
-    if (isReference(cursorStr)) {
-      pointer = parseReference(cursorStr, pointer)
+    if (isReference(input[cursor])) {
+      pointer = parseReference(input[cursor], pointer)
     } else {
       let val
-      switch (true) {
-        case isString(cursorStr):
-          [cursor, val] = parseString(input, cursor)
-          break;
-        case isNumber(cursorStr):
-          [cursor, val] = parseNumber(input, cursor)
-          break;
-        case isBoolean(cursorStr):
-          [cursor, val] = parseBoolean(input, cursor)
-          break;
-        case isNull(cursorStr):
-          [cursor, val] = parseNull(cursor)
-          break;
-      }
+      [cursor, val] = dispatch(
+        alt(isString, () => parseString(input, cursor)),
+        alt(isNumber, () => parseNumber(input, cursor)),
+        alt(isBoolean, () => parseBoolean(input, cursor)),
+        alt(isNull, () => parseNull(cursor)),
+        () => [cursor, undefined]
+      )(input[cursor])
       if (typeof val !== 'undefined') {
         setValue(pointer, val)
       }
@@ -46,6 +38,16 @@ const parser = input => {
     i = cursor + 1
   }
   return getValue(pointer)
+}
+
+const alt = (fn1, fn2) => val => (fn1(val) ? fn2(val) : undefined)
+const dispatch = (...fns) => (...args) => {
+  for (const fn of fns) {
+    const result = fn(...args)
+    if (typeof result !== 'undefined') {
+      return result
+    }
+  }
 }
 
 const parseString = (input, cursor) => {
