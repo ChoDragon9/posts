@@ -9,25 +9,21 @@ const parser = input => {
     let cursor = i
     const cursorStr = input[cursor]
     if (isReference(cursorStr)) {
-      parseReference(cursorStr, stack)
+      parseReference(input, cursor, stack)
     } else {
-      let val
       switch (true) {
         case isString(cursorStr):
-          [cursor, val] = parseString(input, cursor)
+          cursor = parseString(input, cursor, stack)
           break;
         case isNumber(cursorStr):
-          [cursor, val] = parseNumber(input, cursor)
+          cursor = parseNumber(input, cursor, stack)
           break;
         case isBoolean(cursorStr):
-          [cursor, val] = parseBoolean(input, cursor)
+          cursor = parseBoolean(input, cursor, stack)
           break;
         case isNull(cursorStr):
-          [cursor, val] = parseNull(cursor)
+          cursor = parseNull(cursor, stack)
           break;
-      }
-      if (typeof val !== 'undefined') {
-        stack.setValue(val)
       }
     }
     i = cursor + 1
@@ -43,10 +39,11 @@ const isNumber = v => v === '-' || parseFloat(v) > -1
 const isBoolean = v => v === 't' || v === 'f'
 const isNull = v => v === 'n'
 
-const parseString = (input, cursor) => {
+const parseString = (input, cursor, stack) => {
   const newCursor = findEndString(input, cursor)
   const str = input.substring(cursor + 1, newCursor)
-  return [newCursor, str]
+  stack.setValue(str)
+  return newCursor
 }
 
 const findEndString = (input, cursor) => {
@@ -59,12 +56,13 @@ const findEndString = (input, cursor) => {
 
 const findString = (input, cursor) => input.indexOf(`"`, cursor + 1)
 
-const parseNumber = (input, cursor) => {
+const parseNumber = (input, cursor, stack) => {
   const nearCursor = findEndNumber(input, cursor)
   const newCursor = nearCursor - 1
   let num = input.substring(cursor, nearCursor).trim()
   num = parseFloat(num)
-  return [newCursor, num]
+  stack.setValue(num)
+  return newCursor
 }
 
 const findEndNumber = (input, cursor) => {
@@ -76,17 +74,19 @@ const findEndNumber = (input, cursor) => {
   return nearCursor
 }
 
-const parseBoolean = (input, cursor) => {
+const parseBoolean = (input, cursor, stack) => {
   const isTrue = input[cursor] === 't'
   const val = isTrue ? true : false
   const newCursor = cursor + (isTrue ? 3 : 4)
-  return [newCursor, val]
+  stack.setValue(val)
+  return newCursor
 }
 
-const parseNull = (cursor) => {
+const parseNull = (cursor, stack) => {
   const val = null
   const newCursor = cursor + 3
-  return [newCursor, val]
+  stack.setValue(val)
+  return newCursor
 }
 
 const parseReference = (cursorStr, stack) => {
