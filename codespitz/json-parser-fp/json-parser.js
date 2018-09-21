@@ -23,10 +23,12 @@ const parser = input => {
     if (isReference(input[cursor])) {
       pointer = parseReference(input[cursor], pointer)
     } else {
-      let val
       alt(
         ([, val]) => (typeof val !== 'undefined'),
-        () => setValue(pointer, val)
+        ([newCursor, val]) => {
+          cursor = newCursor
+          setValue(pointer, val)
+        }
       )
         (dispatch(
           alt(isString, () => parseString(input, cursor)),
