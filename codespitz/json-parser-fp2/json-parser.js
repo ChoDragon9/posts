@@ -61,8 +61,7 @@ const parseNumber = ({input, index, stack}) => {
     _.filter(v => v > -1),
     _.min
   )([`,`, `]`, `}`])
-  const num = parseFloat(_.substr(input, index, cursor))
-  stack.setValue(num)
+  _.go(_.substr(input, index, cursor), parseFloat, stack.setValue)
   return cursor - 1
 }
 
