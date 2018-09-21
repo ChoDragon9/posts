@@ -30,13 +30,22 @@ const parser = input => {
   return stack.getValue()
 }
 
-const isString = v => v === `"`
 const isObject = v => v === `{` || v === `}`
 const isArray = v => v === `[` || v === `]`
 const isReference = v => isObject(v) || isArray(v)
+const isString = v => v === `"`
 const isNumber = v => v === '-' || parseFloat(v) > -1
 const isBoolean = v => v === 't' || v === 'f'
 const isNull = v => v === 'n'
+
+const parseReference = (cursorStr, stack) => {
+  const delimiter = isObject(cursorStr) ? `{` : `[`
+  if (cursorStr === delimiter) {
+    stack.forword(isObject(cursorStr) ? {} : [])
+  } else {
+    stack.backword()
+  }
+}
 
 const parseString = (input, cursor, stack) => {
   const newCursor = findEndString(input, cursor)
@@ -79,15 +88,6 @@ const parseBoolean = (input, cursor, stack) => {
 const parseNull = (cursor, stack) => {
   stack.setValue(null)
   return cursor + 3
-}
-
-const parseReference = (cursorStr, stack) => {
-  const delimiter = isObject(cursorStr) ? `{` : `[`
-  if (cursorStr === delimiter) {
-    stack.forword(isObject(cursorStr) ? {} : [])
-  } else {
-    stack.backword()
-  }
 }
 
 module.exports = { parser }
