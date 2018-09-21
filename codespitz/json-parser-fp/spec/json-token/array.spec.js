@@ -7,7 +7,9 @@ describe('prefix-notation/array', () => {
     const html = `[]`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual(['[', ']'])
@@ -18,7 +20,9 @@ describe('prefix-notation/array', () => {
     const html = `["value"]`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual(['[', "value", ']'])
@@ -29,7 +33,9 @@ describe('prefix-notation/array', () => {
     const html = `[123]`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual(['[', 123, ']'])
@@ -40,7 +46,9 @@ describe('prefix-notation/array', () => {
     const html = `[{"key": "value"}]`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual(['[', '{', "key", "value", '}', ']'])
@@ -51,7 +59,9 @@ describe('prefix-notation/array', () => {
     const html = `[[123]]`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual(['[','[', 123,']', ']'])
@@ -62,7 +72,9 @@ describe('prefix-notation/array', () => {
     const html = `[true]`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual(['[', true, ']'])
@@ -73,7 +85,9 @@ describe('prefix-notation/array', () => {
     const html = `[false]`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual(['[', false, ']'])
@@ -84,7 +98,9 @@ describe('prefix-notation/array', () => {
     const html = `[null]`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual(['[', null, ']'])

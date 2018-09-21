@@ -14,7 +14,9 @@ describe('prefix-notation/number', () => {
     ]`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual([
@@ -34,7 +36,9 @@ describe('prefix-notation/number', () => {
     const html = '123'
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual([123])
@@ -45,7 +49,9 @@ describe('prefix-notation/number', () => {
     const html = `{ "min": -1.0e+28, "max": 1.0e+28 }`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual(['{', "min", -1.0e+28, "max", 1.0e+28, '}'])

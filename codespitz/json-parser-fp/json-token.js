@@ -7,20 +7,18 @@ const {
 const {isReference} = require('./helper')
 const { extractNonRef } = require('./extract')
 
-const jsonToken = input => {
-  const arr = []
+const jsonToken = (input, iter) => {
   step(input, ({char, index, str}) => {
     if (isReference(char)) {
-      arr.push(char)
+      iter(char)
     } else {
       const [newIndex, val] = extractNonRef({char, index, str})
       if (go(val, isUndefined, not)) {
-        arr.push(val)
+        iter(val)
         return newIndex + 1
       }
     }
   })
-  return arr
 }
 
 module.exports = {jsonToken}

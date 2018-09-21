@@ -7,7 +7,8 @@ describe('prefix-notation/string', () => {
     const html = `"value"`
 
     // When
-    const result = jsonToken(html)
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual([`value`])
@@ -18,7 +19,8 @@ describe('prefix-notation/string', () => {
     const html = `""`
 
     // When
-    const result = jsonToken(html)
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual([``])
@@ -29,7 +31,9 @@ describe('prefix-notation/string', () => {
     const html = `"value\\"value"`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual([`value\\"value`])
@@ -40,7 +44,9 @@ describe('prefix-notation/string', () => {
     const html = `"value\\"value"`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual([`value\\"value`])
@@ -51,7 +57,9 @@ describe('prefix-notation/string', () => {
     const html = `"WHITE FROWNING FACE (U+2639)"`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual(["WHITE FROWNING FACE (U+2639)"])
@@ -62,7 +70,9 @@ describe('prefix-notation/string', () => {
     const html = `{"title":"\u041f\u043e\u043b\u0442\u043e\u0440\u0430 \u0417\u0435\u043c\u043b\u0435\u043a\u043e\u043f\u0430" }`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual([

@@ -7,7 +7,9 @@ describe('prefix-notation/boolean-null', () => {
     const html = `true`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual([true])
@@ -18,7 +20,9 @@ describe('prefix-notation/boolean-null', () => {
     const html = `false`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual([false])
@@ -29,7 +33,9 @@ describe('prefix-notation/boolean-null', () => {
     const html = `null`
 
     // When
-    const result = jsonToken(html)
+
+    const result = []
+    jsonToken(html, v => result.push(v))
 
     // Then
     expect(result).toEqual([null])
