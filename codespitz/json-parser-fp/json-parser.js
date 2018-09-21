@@ -44,16 +44,17 @@ const isBoolean = v => v === 't' || v === 'f'
 const isNull = v => v === 'n'
 
 const parseReference = (cursorStr, pointer) => {
-  let newPointer
-  const delimiter = isObject(cursorStr) ? `{` : `[`
-  if (cursorStr === delimiter) {
-    const val = isObject(cursorStr) ? {} : []
-    setValue(pointer, val)
-    newPointer = createNode({ val, back: pointer })
-  } else {
-    newPointer = getBackword(pointer)
-  }
-  return newPointer
+  return dispatch(
+    bmatch(v => v === '}' || v === ']', _ => getBackword(pointer)),
+    v => {
+      const val = dispatch(
+        bmatch(v => v === '{', _.identity({})),
+        bmatch(v => v === '[', _.identity([])),
+      )(v)
+      setValue(pointer, val)
+      return createNode({ val, back: pointer })
+    }
+  )
 }
 
 const parseString = (input, cursor) => {
