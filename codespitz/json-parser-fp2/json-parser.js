@@ -2,90 +2,96 @@ const { node, getBackword, getValue, setValue } = require('./pointer')
 const _ = require('./fp')
 
 const parser = input => {
-  let pointer = node()
+  let current = node()
   _.step(_.trim(input), (char, index, input) => {
-    const {newPointer, cursor} = _.go(
-      {char, input, index, pointer},
-      _.dispatch(
-        _.match(isReference, parseReference),
-        _.match(isString, parseString),
-        _.match(isNumber, parseNumber),
-        _.match(isBoolean, parseBoolean),
-        _.match(isNull, parseNull),
-        ({index, pointer}) => ({newPointer: pointer, cursor: index})
-      )
+    const {newPointer, cursor} = _.switchcase({char, input, index, current})
+    (
+      _.match(isObject, parseObject),
+      _.match(isArray, parseArray),
+      _.match(isString, parseString),
+      _.match(isNumber, parseNumber),
+      _.match(isBoolean, parseBoolean),
+      _.match(isNull, parseNull),
+      ({index, current}) => ({newPointer: current, cursor: index})
     )
-    pointer = newPointer
+    current = newPointer
     return cursor + 1
   })
-  return getValue(pointer)
+  return getValue(current)
 }
 
-const isString = ({char}) => _.same(`"`)(char)
 const isObject = ({char}) => _.alt(_.same('{'), _.same('}'))(char)
 const isArray = ({char}) => _.alt(_.same('['), _.same(']'))(char)
-const isReference = ({char}) => _.alt(isObject, isArray)({char})
+const isString = ({char}) => _.same(`"`)(char)
 const isNumber = ({char}) => _.alt(_.same('-'), v => parseFloat(v) > -1)(char)
 const isBoolean = ({char}) => _.alt(_.same('t'), _.same('f'))(char)
 const isNull = ({char}) => _.same('n')(char)
 
-const parseReference = ({char, input, index, pointer}) => {
-  const newPointer = _.dispatch(
-    _.match(
-      _.alt(_.same('}'), _.same(']')),
-      _ => getBackword(pointer)
-    ),
-    v => {
-      const val = _.dispatch(
-        _.match(_.same('{'), _.always({})),
-        _.match(_.same('['), _.always([])),
-      )(v)
-      setValue(pointer, val)
-      return node(val, pointer)
-    }
-  )(char)
-  return {newPointer, cursor: index}
+const parseObject = ({char, input, index, current}) => {
+  return {
+    newPointer: _.switchcase(char)
+      (
+        _.match(_.same('}'), _.always(getBackword(current))),
+        _ => {
+          const val = {}
+          setValue(current, val)
+          return node(val, current)
+        }
+      ),
+    cursor: index
+  }
 }
 
-const parseString = ({input, index, pointer}) => {
+const parseArray = ({char, input, index, current}) => {
+  return {
+    newPointer: _.switchcase(char)
+      (
+        _.match(_.same(']'), _.always(getBackword(current))),
+        _ => {
+          const val = []
+          setValue(current, val)
+          return node(val, current)
+        }
+      ),
+    cursor: index
+  }
+}
+
+const parseString = ({input, index, current}) => {
   let end = false
   let cursor = index
   while (_.not(end)) {
     cursor = input.indexOf(`"`, cursor + 1)
     end = _.go(input[cursor - 1], _.same(`\\`), _.not)
   }
-  setValue(pointer, _.substr(input, index + 1, cursor))
-  return {newPointer: pointer, cursor}
+  setValue(current, _.substr(input, index + 1, cursor))
+  return {newPointer: current, cursor}
 }
 
-const parseNumber = ({input, index, pointer}) => {
-  const cursor = findEndNumber(input, index)
-  const num = parseFloat(_.substr(input, index, cursor))
-  setValue(pointer, num)
-  return {newPointer: pointer, cursor: cursor - 1}
-}
-
-const findEndNumber = (input, cursor) => {
-  return _.pipe(
-    _.map(v => input.indexOf(v, cursor + 1)),
+const parseNumber = ({input, index, current}) => {
+  const cursor = _.pipe(
+    _.map(v => input.indexOf(v, index + 1)),
     _.filter(v => v > -1),
     _.min
   )([`,`, `]`, `}`])
+  const num = parseFloat(_.substr(input, index, cursor))
+  setValue(current, num)
+  return {newPointer: current, cursor: cursor - 1}
 }
 
-const parseBoolean = ({char, input, index, pointer}) => {
+const parseBoolean = ({char, input, index, current}) => {
   const isTrue = _.same(char)('t')
-  setValue(pointer, isTrue ? true : false)
+  setValue(current, isTrue ? true : false)
   return {
-    newPointer: pointer,
+    newPointer: current,
     cursor: index + (isTrue ? 3 : 4)
   }
 }
 
-const parseNull = ({input, index, pointer}) => {
-  setValue(pointer, null)
+const parseNull = ({input, index, current}) => {
+  setValue(current, null)
   return {
-    newPointer: pointer,
+    newPointer: current,
     cursor: index + 3
   }
 }
