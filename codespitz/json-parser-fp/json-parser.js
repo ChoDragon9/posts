@@ -18,8 +18,7 @@ const {
   dispatch,
   step,
   isUndefined,
-  not,
-  identity
+  not
 } = require('./fp')
 
 const parser = input => {
@@ -76,13 +75,11 @@ const parseNumber = (input, cursor) => {
 }
 
 const findEndNumber = (input, cursor) => {
-  const nextCursor = cursor + 1
-  const commaIdx = input.indexOf(`,`, nextCursor)
-  const arrIdx = input.indexOf(`]`, nextCursor)
-  const objIdx = input.indexOf(`}`, nextCursor)
-  const nearCursor = Math.min(...[commaIdx, arrIdx, objIdx].filter(identity))
-
-  return nearCursor
+  return go(
+    [`,`, `]`, `}`].map(v => input.indexOf(v, cursor + 1)),
+    v => v.filter(v => v > -1),
+    args =>  Math.min(...args)
+  )
 }
 
 const parseBoolean = (input, cursor) => {
