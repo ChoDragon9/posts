@@ -12,7 +12,13 @@ const {
   getValue,
   setValue
 } = require('./pointer')
-const {go, alt, dispatch, step} = require('./fp')
+const {
+  go,
+  alt,
+  dispatch,
+  step,
+  isUndefined
+} = require('./fp')
 
 const parser = input => {
   input = input.trim()
@@ -32,7 +38,7 @@ const parser = input => {
         () => [cursor, undefined]
       )),
       alt(
-        ([, val]) => (typeof val !== 'undefined'),
+        ([, val]) => go(val, isUndefined, not),
         ([newCursor, val]) => {
           cursor = newCursor
           setValue(pointer, val)
