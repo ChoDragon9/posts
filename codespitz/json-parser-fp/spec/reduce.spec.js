@@ -12,6 +12,6 @@ describe('fp', () => {
     }, '')
 
     // Then
-    expect(str).toEqual('12d345')
+    expect(str).toEqual('12345')
   })
 })
