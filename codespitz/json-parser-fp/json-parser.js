@@ -17,7 +17,8 @@ const {
   alt,
   dispatch,
   step,
-  isUndefined
+  isUndefined,
+  not
 } = require('./fp')
 
 const parser = input => {
@@ -57,14 +58,13 @@ const parseString = (input, cursor) => {
 }
 
 const findEndString = (input, cursor) => {
-  let newCursor = findString(input, cursor)
-  while (input[newCursor - 1] === `\\`) {
-    newCursor = findString(input, newCursor)
+  let end = false
+  while (not(end)) {
+    cursor = input.indexOf(`"`, cursor + 1)
+    end = go(input[cursor - 1] === `\\`, not)
   }
-  return newCursor
+  return cursor
 }
-
-const findString = (input, cursor) => input.indexOf(`"`, cursor + 1)
 
 const parseNumber = (input, cursor) => {
   const nearCursor = findEndNumber(input, cursor)
