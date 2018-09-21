@@ -34,7 +34,7 @@ const parser = input => {
         }),
         alt(isString, () => parseString(input, cursor)),
         alt(isNumber, () => parseNumber(input, cursor)),
-        alt(isBoolean, () => parseBoolean(input, cursor)),
+        alt(isBoolean, v => parseBoolean(v)),
         alt(isNull, () => parseNull(cursor)),
         () => [cursor, undefined]
       )),
@@ -82,8 +82,8 @@ const findEndNumber = (input, cursor) => {
   )
 }
 
-const parseBoolean = (input, cursor) => {
-  const isTrue = input[cursor] === 't'
+const parseBoolean = (str) => {
+  const isTrue = str === 't'
   return [
     cursor + (isTrue ? 3 : 4),
     isTrue ? true : false
