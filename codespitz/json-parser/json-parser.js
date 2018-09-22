@@ -74,7 +74,7 @@ const parseNumber = (input, cursor, stack) => {
 const findEndNumber = (input, cursor) => {
   return Math.min(
     ...[`,`, `]`, `}`]
-      .map(v => input.indexOf(v, cursor + 1))
+      .map(str => input.indexOf(str, cursor + 1))
       .filter(v => v > -1)
   )
 }
