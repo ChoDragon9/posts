@@ -5,7 +5,7 @@
   "scripts": {
     "upload": "git add -A && git commit -m 'add' && git push origin master",
     "download": "git pull origin master",
-    "test": "mocha ./**/spec/**/*.spec.js ./**/spec/*.spec.js"
+    "test": "mocha ./json-parser-fp3/spec/**/*.spec.js ./json-parser-fp3/spec/*.spec.js"
   },
   "devDependencies": {
     "expect": "^23.6.0",
