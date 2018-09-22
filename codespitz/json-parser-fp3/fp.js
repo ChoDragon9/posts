@@ -4,7 +4,7 @@ const pipe = (...fns) => val => {
   }
   return val
 }
-const bmatch = (fn1, fn2) => val => (fn1(val) ? fn2(val) : undefined)
+const match = (fn1, fn2) => val => (fn1(val) ? fn2(val) : undefined)
 const dispatch = (...fns) => (...args) => {
   for (const fn of fns) {
     const result = fn(...args)
@@ -24,7 +24,7 @@ const not = v => !v
 
 module.exports = {
   pipe,
-  bmatch,
+  match,
   dispatch,
   go,
   isUndefined,

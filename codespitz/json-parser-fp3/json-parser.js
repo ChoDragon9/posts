@@ -1,9 +1,8 @@
 const Stack = require('./stack')
 const {
   pipe,
-  bmatch,
+  match,
   dispatch,
-  go,
   isUndefined,
   not
 } = require('./fp')
@@ -17,16 +16,16 @@ const parser = input => {
     let cursor = index
     pipe(
       dispatch(
-        bmatch(isObject, parseObject),
-        bmatch(isArray, parseArray),
-        bmatch(isString, parseString),
-        bmatch(isNumber, parseNumber),
-        bmatch(isBoolean, parseBoolean),
-        bmatch(isNull, parseNull)
+        match(isObject, parseObject),
+        match(isArray, parseArray),
+        match(isString, parseString),
+        match(isNumber, parseNumber),
+        match(isBoolean, parseBoolean),
+        match(isNull, parseNull)
       ),
-      bmatch(
+      match(
         pipe(isUndefined, not),
-        newCursor => (cursor = newCursor)
+        newCursor => {cursor = newCursor}
       )
     )({input, cursor, stack, char})
     index = cursor + 1
