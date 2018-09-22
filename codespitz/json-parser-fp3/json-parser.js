@@ -33,13 +33,12 @@ const parser = input => {
   return stack.getValue()
 }
 
-const same = (...val) => ({char}) => val.every(v => v === char)
-const isObject = same(`{`, `}`)
-const isArray = same(`[`, `]`)
-const isString = same(`"`)
+const isObject = ({char: v}) => v === `{` || v === `}`
+const isArray = ({char: v}) => v === `[` || v === `]`
+const isString = ({char: v}) => v === `"`
 const isNumber = ({char: v}) => v === '-' || parseFloat(v) > -1
-const isBoolean = same(`t`, `f`)
-const isNull = same(`n`)
+const isBoolean = ({char: v}) => v === 't' || v === 'f'
+const isNull = ({char: v}) => v === 'n'
 
 const parseObject = ({char, stack}) => {
   char === `{` ? stack.forword({}) : stack.backword()
