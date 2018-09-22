@@ -82,7 +82,7 @@ const findEndString = ({input, cursor}) => {
 }
 
 const parseNumber = ({input, cursor, stack}) => {
-  const nearCursor = findEndNumber(input, cursor)
+  const nearCursor = findEndNumber({input, cursor})
   let num = input.substring(cursor, nearCursor).trim()
   num = parseFloat(num)
   stack.setValue(num)
