@@ -1,9 +1,9 @@
-import {createStore, component} from './helper'
-import {createTodoItem} from './TodoItem'
+import {createStore, component} from './core'
+import {TodoItem} from './TodoItem'
 
 const store = createStore()
 
-export const createTodoList = component({
+export const TodoList = component({
   template () {
     return `<div>
       <form>
@@ -40,7 +40,7 @@ export const createTodoList = component({
   },
   components () {
     return [
-      ['todo-item', createTodoItem, {store}]
+      ['todo-item', TodoItem, {store}]
     ]
   },
   beforeCreate ({parentState}) {

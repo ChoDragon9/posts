@@ -1,6 +1,6 @@
-import {component} from './helper'
+import {component} from './core'
 
-export const createTodoItem = component({
+export const TodoItem = component({
   template ({store}) {
     const todo = store.get('todo')
     const items = todo.reduce((result, {id, contents}) => {

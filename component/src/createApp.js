@@ -1,5 +1,5 @@
-import {component} from './helper'
-import {createTodoList} from './TodoList'
+import {component} from './core'
+import {TodoList} from './TodoList'
 
 export const createApp = component({
   state () {
@@ -18,7 +18,7 @@ export const createApp = component({
   },
   components ({state}) {
     return [
-      ['todo-list', createTodoList, {state}]
+      ['todo-list', TodoList, {state}]
     ]
   }
 })
