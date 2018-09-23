@@ -24,6 +24,41 @@ export const bindComponent = (components, dom) => {
   }
 }
 
+const noop = () => {}
+
+export const component = ({
+                            state = noop,
+                            template = noop,
+                            components = noop,
+                            methods = noop,
+                            events = noop,
+                            beforeCreate = noop
+                          }) => {
+  const create = (args) => () => {
+    const dom = parseHTML(template(args))
+    if (events !== noop) {
+      bindEvent(events(), methods(Object.assign({dom}, args)), dom)
+    }
+    if (components !== noop) {
+      bindComponent(components(args), dom)
+    }
+    return dom
+  }
+  return ({state: parentState, store} = {}) => {
+    const args = {state: state(), parentState, store}
+    const render = create(args)
+    let dom
+    const reRender = () => {
+      const newDom = render()
+      dom.replaceWith(newDom)
+      dom = newDom
+    }
+    beforeCreate(Object.assign({render: reRender}, args))
+    dom = render()
+    return dom
+  }
+}
+
 export const createStore = () => {
   const store = new Map()
   const subscriber = new Map()

@@ -1,27 +1,24 @@
-import {bindComponent, getElem, parseHTML} from './helper'
+import {component} from './helper'
 import {createTodoList} from './TodoList'
 
-export const createApp = () => {
-  const initState = {
-    todo: [
-      { id: 0, contents: 'asdasdad' },
-      { id: 1, contents: 'asdasdad' },
-      { id: 2, contents: 'asdasdad' }
-    ]
-  }
-  const template = () => `<div>
-    <todo-list></todo-list>
-  </div>`
-  const components = () => {
+export const createApp = component({
+  state () {
+    return {
+      todo: [
+        { id: 0, contents: 'asdasdad' },
+        { id: 1, contents: 'asdasdad' },
+        { id: 2, contents: 'asdasdad' }
+      ]
+    }
+  },
+  template () {
+    return `<div>
+      <todo-list></todo-list>
+    </div>`
+  },
+  components ({state}) {
     return [
-      ['todo-list', createTodoList, {initState}]
+      ['todo-list', createTodoList, {state}]
     ]
   }
-  const mount = () => {
-    const dom = parseHTML(template())
-    bindComponent(components(), dom)
-    return dom
-  }
-
-  return mount()
-}
+})

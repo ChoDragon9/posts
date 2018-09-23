@@ -1,9 +1,7 @@
-import {parseHTML, bindEvent} from './helper'
+import {component} from './helper'
 
-export const createTodoItem = ({store}) => {
-  let dom = null
-  // User
-  const template = () => {
+export const createTodoItem = component({
+  template ({store}) {
     const todo = store.get('todo')
     const items = todo.reduce((result, {id, contents}) => {
       return `${result}<li data-id="${id}">
@@ -18,37 +16,23 @@ export const createTodoItem = ({store}) => {
       list = 'No Items'
     }
     return `<div>${list}</div>`
-  }
-  const methods = {
-    render () {
-      const newDom = this.createNewDom()
-      dom.replaceWith(newDom)
-      dom = newDom
-    },
-    createNewDom () {
-      const dom = parseHTML(template())
-      bindEvent(events, methods, dom)
-      return dom
-    },
-    removeItem () {
-      const id = this.parentNode.getAttribute('data-id')
-      const todo = store.get('todo')
-        .filter((item) => item.id.toString() !== id)
-      store.set('todo', todo)
+  },
+  methods ({store}) {
+    return {
+      removeItem () {
+        const id = this.parentNode.getAttribute('data-id')
+        const todo = store.get('todo')
+          .filter((item) => item.id.toString() !== id)
+        store.set('todo', todo)
+      }
     }
+  },
+  events () {
+    return [
+      ['li > button', 'onclick', 'removeItem']
+    ]
+  },
+  beforeCreate ({store, render}) {
+    store.subscribe('todo', render)
   }
-  // Framework
-  const mount = () => {
-    dom = methods.createNewDom()
-    store.subscribe('todo', () => {
-      methods.render()
-    })
-    return dom
-  }
-  // Directive
-  const events = [
-    ['li > button', 'onclick', 'removeItem']
-  ]
-
-  return mount()
-}
+})

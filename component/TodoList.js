@@ -1,11 +1,10 @@
-import {parseHTML, bindEvent, createStore, bindComponent} from './helper'
+import {createStore, component} from './helper'
 import {createTodoItem} from './TodoItem'
 
-export const createTodoList = ({initState}) => {
-  let dom = null
-  const store = createStore()
-  // User
-  const template = () => {
+const store = createStore()
+
+export const createTodoList = component({
+  template () {
     return `<div>
       <form>
           <input type="text" placeholder="enter task">
@@ -16,39 +15,35 @@ export const createTodoList = ({initState}) => {
       -------
       <todo-item></todo-item>
     </div>`
-  }
-  const methods = {
-    addItem (event) {
-      event.preventDefault()
-      const input = dom.querySelector('input[type="text"]')
-      const todo = store.get('todo').map(({contents}, index) => {
-        return { id: index, contents }
-      })
-      todo.push({
-        id: todo.length,
-        contents: input.value
-      })
-      store.set('todo', todo)
-      input.value = ''
+  },
+  events () {
+    return [
+      ['form', 'onsubmit', 'addItem']
+    ]
+  },
+  methods ({dom}) {
+    return {
+      addItem (event) {
+        event.preventDefault()
+        const input = dom.querySelector('input[type="text"]')
+        const todo = store.get('todo').map(({contents}, index) => {
+          return { id: index, contents }
+        })
+        todo.push({
+          id: todo.length,
+          contents: input.value
+        })
+        store.set('todo', todo)
+        input.value = ''
+      }
     }
-  }
-  const components = () => {
+  },
+  components () {
     return [
       ['todo-item', createTodoItem, {store}]
     ]
+  },
+  beforeCreate ({parentState}) {
+    store.set('todo', parentState.todo)
   }
-  // Framework
-  const mount = () => {
-    store.set('todo', initState.todo)
-    dom = parseHTML(template())
-    bindEvent(events, methods, dom)
-    bindComponent(components(), dom)
-    return dom
-  }
-  // Directive
-  const events = [
-    ['form', 'onsubmit', 'addItem']
-  ]
-
-  return mount()
-}
+})
