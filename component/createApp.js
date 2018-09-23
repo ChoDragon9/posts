@@ -1,7 +1,7 @@
 import {bindComponent, getElem, parseHTML} from './helper'
 import {createTodoList} from './TodoList'
 
-const createApp = () => {
+export const createApp = () => {
   const initState = {
     todo: [
       { id: 0, contents: 'asdasdad' },
@@ -24,8 +24,4 @@ const createApp = () => {
   }
 
   return mount()
-}
-
-export default () => {
-  getElem('#container')[0].appendChild(createApp())
 }

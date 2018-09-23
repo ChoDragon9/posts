@@ -1,3 +1,6 @@
-import createApp from './createApp'
+import {createApp} from './createApp'
+import {getElem} from "./helper"
 
-createApp()
+window.onload = () => {
+  getElem('#container')[0].appendChild(createApp())
+}
