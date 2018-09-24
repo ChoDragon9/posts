@@ -25,38 +25,32 @@ export const bindComponent = (components, dom) => {
 }
 
 const noop = () => {}
+const always = v => _ => v
 
-export const component = ({
-                            state = noop,
-                            template = noop,
-                            components = noop,
-                            methods = noop,
-                            events = noop,
-                            beforeCreate = noop
-                          }) => {
-  const create = (args) => () => {
-    const dom = parseHTML(template(args))
-    if (events !== noop) {
-      bindEvent(events(), methods(Object.assign({dom}, args)), dom)
-    }
-    if (components !== noop) {
-      bindComponent(components(args), dom)
-    }
-    return dom
-  }
-  return ({state: parentState, store} = {}) => {
-    const args = {state: state(), parentState, store}
-    const render = create(args)
-    let dom
-    const reRender = () => {
-      const newDom = render()
-      dom.replaceWith(newDom)
-      dom = newDom
-    }
-    beforeCreate(Object.assign({render: reRender}, args))
-    dom = render()
-    return dom
-  }
+export const component = (options) => () => {
+  const { beforeCreate = noop } = options
+  const render = create(options)
+  let dom = render()
+  beforeCreate({render: replace(dom, render)})
+  return dom
+}
+
+const replace = (dom, render) => () => {
+  const newDom = render()
+  dom.replaceWith(newDom)
+  dom = newDom
+}
+
+const create = ({
+  template = noop,
+  components = always([]),
+  methods = always([]),
+  events = always([])
+}) => () => {
+  const dom = parseHTML(template())
+  bindEvent(events(), methods({dom}), dom)
+  bindComponent(components(), dom)
+  return dom
 }
 
 export const createStore = () => {

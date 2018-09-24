@@ -1,7 +1,8 @@
 import {component} from './core'
+import {store} from './store'
 
 export const TodoItem = component({
-  template ({store}) {
+  template () {
     const todo = store.get('todo')
     const items = todo.reduce((result, {id, contents}) => {
       return `${result}<li data-id="${id}">
@@ -17,7 +18,7 @@ export const TodoItem = component({
     }
     return `<div>${list}</div>`
   },
-  methods ({store}) {
+  methods () {
     return {
       removeItem () {
         const id = this.parentNode.getAttribute('data-id')
@@ -32,7 +33,7 @@ export const TodoItem = component({
       ['li > button', 'onclick', 'removeItem']
     ]
   },
-  beforeCreate ({store, render}) {
+  beforeCreate ({render}) {
     store.subscribe('todo', render)
   }
 })

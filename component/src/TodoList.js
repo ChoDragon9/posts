@@ -1,7 +1,6 @@
-import {createStore, component} from './core'
+import {component} from './core'
 import {TodoItem} from './TodoItem'
-
-const store = createStore()
+import {store} from './store'
 
 export const TodoList = component({
   template () {
@@ -40,10 +39,9 @@ export const TodoList = component({
   },
   components () {
     return [
-      ['todo-item', TodoItem, {store}]
+      ['todo-item', TodoItem]
     ]
   },
-  beforeCreate ({parentState}) {
-    store.set('todo', parentState.todo)
+  beforeCreate () {
   }
 })
