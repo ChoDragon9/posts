@@ -1,4 +1,4 @@
-import {component} from './core'
+import {component} from './core/component'
 import {TodoList} from './TodoList'
 
 export const createApp = component({

@@ -1,4 +1,4 @@
-import {component} from './core'
+import {component} from './core/component'
 import {TodoItem} from './TodoItem'
 import {store} from './store'
 
@@ -41,7 +41,5 @@ export const TodoList = component({
     return [
       ['todo-item', TodoItem]
     ]
-  },
-  beforeCreate () {
   }
 })

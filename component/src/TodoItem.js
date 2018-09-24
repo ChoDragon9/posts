@@ -1,4 +1,4 @@
-import {component} from './core'
+import {component} from './core/component'
 import {store} from './store'
 
 export const TodoItem = component({
