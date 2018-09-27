@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+  <canvas id="canvas" width="608" height="608"></canvas>
+  <script>
+    window.onload = () => {
+      const cvs = document.getElementById('canvas')
+      const ctx = cvs.getContext('2d')
+
+      const box = 32
+
+      const snake = [
+        {x : 9 * box, y: 10 * box},
+        {x : 8 * box, y: 10 * box}
+      ]
+
+      const createFood = () => ({
+        x: box + box * Math.floor(Math.random() * 17),
+        y: box + box * Math.floor(Math.random() * 17)
+      })
+      let food = createFood()
+
+      let score = 0
+
+      const draw = () => {
+        // bg
+        ctx.fillStyle = '#8ee1d2'
+        ctx.fillRect(box, box, box * 17, box * 17)
+
+        // food
+        ctx.fillStyle = 'red'
+        ctx.fillRect(food.x, food.y, box, box)
+        ctx.strokeStyle = 'red'
+        ctx.strokeRect(food.x, food.y, box, box)
+
+        // snake
+        snake.forEach(({x, y}, i) => {
+          ctx.fillStyle = i === 0 ? 'green' : 'white'
+          ctx.fillRect(x, y, box, box)
+          ctx.strokeStyle = 'red'
+          ctx.strokeRect(x, y, box, box)
+        })
+
+        ctx.fillStyle = 'white'
+        ctx.font = '45px'
+        ctx.fillText(score, 2 * box, 1.6 * box)
+      }
+
+      const run = _ => requestAnimationFrame(draw)
+      run()
+
+      // Control the Snake
+      let d
+      let newHead = null
+      const direction = (event) => {
+        const same = (v) => event.keyCode === v
+        let isAdd = false
+        let isOk = false
+
+        if (same(37) && d != "RIGHT") {
+          d = "LEFT"
+          const [{x, y}] = snake
+          newHead = {x: x - box, y}
+          isOk = true
+        }
+        if (same(38) && d != "DOWN") {
+          d = "UP"
+          const [{x, y}] = snake
+          newHead = {x, y: y - box}
+          isOk = true
+        }
+        if (same(39) && d != "LEFT") {
+          d = "RIGHT"
+          const [{x, y}] = snake
+          newHead = {x: x + box, y}
+          isOk = true
+        }
+        if (same(40) && d != "UP") {
+          d = "DOWN"
+          const [{x, y}] = snake
+          newHead = {x, y: y + box}
+          isOk = true
+        }
+
+        if (isOk) {
+          // When snake eats food
+          if (newHead.x == food.x && newHead.y === food.y) {
+            score++
+            food = createFood()
+            isAdd = true
+          }
+          if (!isAdd) {
+            snake.pop()
+          }
+          snake.unshift(newHead)
+
+          run()
+        }
+      }
+      document.addEventListener('keydown', direction)
+
+      // Game over
+      const collision = (newHead, snake) => {
+
+      }
+    }
+
+  </script>
+</body>
+</html>
