@@ -6,6 +6,21 @@
 <body>
   <canvas id="canvas" width="608" height="608"></canvas>
   <script>
+    const drawRect = (ctx, color, x, y, width, height) => {
+      ctx.fillStyle = color
+      ctx.fillRect(x, y, width, height)
+    }
+
+    const drawStroke = (ctx, color, x, y, width, height) => {
+      ctx.strokeStyle = color
+      ctx.strokeRect(x, y, width, height)
+    }
+
+    const createFood = (box) => ({
+      x: box + box * Math.floor(Math.random() * 17),
+      y: box + box * Math.floor(Math.random() * 17)
+    })
+
     window.onload = () => {
       const cvs = document.getElementById('canvas')
       const ctx = cvs.getContext('2d')
@@ -16,32 +31,23 @@
         {x : 9 * box, y: 10 * box},
         {x : 8 * box, y: 10 * box}
       ]
-
-      const createFood = () => ({
-        x: box + box * Math.floor(Math.random() * 17),
-        y: box + box * Math.floor(Math.random() * 17)
-      })
-      let food = createFood()
+      let food = createFood(box)
 
       let score = 0
 
       const draw = () => {
         // bg
-        ctx.fillStyle = '#8ee1d2'
-        ctx.fillRect(box, box, box * 17, box * 17)
+        drawRect(ctx, '#8ee1d2', box, box, box * 17, box * 17)
 
         // food
-        ctx.fillStyle = 'red'
-        ctx.fillRect(food.x, food.y, box, box)
-        ctx.strokeStyle = 'red'
-        ctx.strokeRect(food.x, food.y, box, box)
+        drawRect(ctx, 'red', food.x, food.y, box, box)
+        drawStroke(ctx, 'red', food.x, food.y, box, box)
 
         // snake
         snake.forEach(({x, y}, i) => {
-          ctx.fillStyle = i === 0 ? 'green' : 'white'
-          ctx.fillRect(x, y, box, box)
-          ctx.strokeStyle = 'red'
-          ctx.strokeRect(x, y, box, box)
+          const color = i === 0 ? 'green' : 'white'
+          drawRect(ctx, color, x, y, box, box)
+          drawStroke(ctx, 'red', x, y, box, box)
         })
 
         ctx.fillStyle = 'white'
@@ -89,7 +95,7 @@
           // When snake eats food
           if (newHead.x == food.x && newHead.y === food.y) {
             score++
-            food = createFood()
+            food = createFood(box)
             isAdd = true
           }
           if (!isAdd) {
