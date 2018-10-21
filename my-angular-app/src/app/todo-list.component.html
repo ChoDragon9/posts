@@ -1,0 +1,8 @@
+<h3>Todo list</h3>
+<p *ngIf="todo.size === 0">Todo is empty.</p>
+<ul *ngIf="todo.size > 0">
+  <li *ngFor="let item of todo">
+    {{item}}
+    <input type="button" value="X" (click)="removeItem(item)">
+  </li>
+</ul>

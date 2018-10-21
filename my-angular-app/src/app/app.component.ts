@@ -3,8 +3,18 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'my-angular-app';
+  // 입력
+  todoItem: string = '';
+  todo: Set<string> = new Set();
+
+  addTodo(): void {
+    this.todo.add(this.todoItem);
+    this.todoItem = '';
+  }
+
+  removeTodo(item: string): void {
+    this.todo.delete(item);
+  }
 }
