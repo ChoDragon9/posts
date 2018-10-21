@@ -12,11 +12,15 @@ export class TodoListService {
 
   add(item: string) {
     this.todo.add(item);
-    this.todoSubject.next(this.todo);
+    this.notify()
   }
 
   remove(item: string) {
     this.todo.delete(item);
-    this.todoSubject.next(this.todo);
+    this.notify()
+  }
+
+  notify() {
+    this.todoSubject.next(new Set(this.todo))
   }
 }
