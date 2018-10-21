@@ -1,16 +1,14 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
+import {TodoListService} from "./todo-list.service";
 
 @Component({
   selector: 'todo-list',
   templateUrl: './todo-list.component.html',
 })
 export class TodoListComponent {
-  @Input()
-  todo: Set<string>;
-  @Output()
-  onremove = new EventEmitter<string>();
+  constructor(private todoService: TodoListService) {}
 
   removeItem(item: string): void {
-    this.onremove.emit(item)
+    this.todoService.remove(item);
   }
 }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {TodoListService} from "./todo-list.service";
 
 @Component({
   selector: 'app-root',
@@ -7,14 +8,11 @@ import { Component } from '@angular/core';
 export class AppComponent {
   // 입력
   todoItem: string = '';
-  todo: Set<string> = new Set();
+
+  constructor(private todoService: TodoListService) { }
 
   addTodo(): void {
-    this.todo.add(this.todoItem);
+    this.todoService.add(this.todoItem);
     this.todoItem = '';
-  }
-
-  removeTodo(item: string): void {
-    this.todo.delete(item);
   }
 }
