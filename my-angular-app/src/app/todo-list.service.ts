@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable()
 export class TodoListService {
   private todo: Set<string> = new Set();
-  private todoSubject = new BehaviorSubject(this.todo);
+  private todoSubject = new BehaviorSubject(new Set(this.todo));
 
   get todo$() {
     return this.todoSubject;
