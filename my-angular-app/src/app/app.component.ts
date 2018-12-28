@@ -1,42 +1,38 @@
 import { Component } from '@angular/core';
-import {TodoListService} from "./todo-list.service";
 import {of, BehaviorSubject, Subject, Observable} from 'rxjs';
-import {map, share, scan, filter, merge, mergeMap, mergeMapTo} from 'rxjs/operators';
-
-type Mapper = (numbers: number[]) => number[];
-
-const identity = v => v;
+import {map, share, scan, filter, merge, mergeMap, mergeMapTo, withLatestFrom} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  update$: BehaviorSubject<Mapper> = new BehaviorSubject<Mapper>(identity);
-  add$: Subject<number> = new Subject<number>();
-  remove$: Subject<number> = new Subject<number>();
+  todo: string;
+
+  update$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  add$: Subject<string> = new Subject<string>();
+  remove$: Subject<string> = new Subject<string>();
   number$ = this.update$.pipe(
-    scan((numbers: number[], operator: Mapper) => operator(numbers), [1, 2, 3])
+    scan((acc, numbers: string[]) => numbers, [])
   );
 
-  constructor(private todoService: TodoListService) {
+  constructor() {
     this.add$.pipe(
-      map((v): Mapper => {
-        return (numbers: number[]) => numbers.concat(v);
-      })
-    ).subscribe(this.update$)
+      withLatestFrom(this.number$),
+      map(([value, todos]: any[]) => todos.concat(value))
+    ).subscribe(this.update$);
     this.remove$.pipe(
-      map((v): Mapper => {
-        return (numbers: number[]) => numbers.filter(n => n !== v);
-      })
-    ).subscribe(this.update$)
+      withLatestFrom(this.number$),
+      map(([value, todos]: any[]) => todos.filter(v => v !== value))
+    ).subscribe(this.update$);
   }
 
   add() {
-    this.add$.next(4);
+    this.add$.next(this.todo);
+    this.todo = '';
   }
 
-  remove() {
-    this.remove$.next(4);
+  remove(todo) {
+    this.remove$.next(todo);
   }
 }

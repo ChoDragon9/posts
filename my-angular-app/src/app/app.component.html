@@ -1,5 +1,11 @@
+<input type="text"
+       value=""
+       [(ngModel)]="todo"
+       (keyup.enter)="add()">
+
 <ul>
-  <li *ngFor="let num of number$ | async">{{num}}</li>
+  <li *ngFor="let num of number$ | async">
+    {{num}}
+    <input type="button" value="X" (click)="remove(num)">
+  </li>
 </ul>
-<input type="button" (click)="add()" value="Add 4">
-<input type="button" (click)="remove()" value="Remove 4">
