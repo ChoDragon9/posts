@@ -2,9 +2,8 @@ const { of } = require('rxjs');
 const { catchError, map } = require('rxjs/operators');
 
 const arr$ = of(1, 2, 3).pipe(
-  map(() => null),
   map(v => {
-    throw new Error('죽어랏!');
+    if (v === 2) throw new Error('죽어랏!');
     return v / 2;
   }),
   catchError(() => {

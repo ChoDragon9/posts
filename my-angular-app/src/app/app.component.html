@@ -1,8 +1,6 @@
 <h1>Todo App</h1>
 
-<input type="text" [(ngModel)]="todoItem">
+<input type="text" [(ngModel)]="todoItem" (keydown.enter)="addTodo()">
 <input type="button" value="Add" (click)="addTodo()">
 
-<todo-list></todo-list>
-<todo-list></todo-list>
 <todo-list></todo-list>

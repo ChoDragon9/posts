@@ -12,7 +12,7 @@ export class AppComponent {
   constructor(private todoService: TodoListService) { }
 
   addTodo(): void {
-    this.todoService.add(this.todoItem);
+    this.todoService.addTodo$.next(this.todoItem);
     this.todoItem = '';
   }
 }

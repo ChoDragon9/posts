@@ -1,19 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import {TodoListService} from "./todo-list.service";
+import {reduce, count, tap, map} from 'rxjs/operators'
 
 @Component({
   selector: 'todo-list',
   templateUrl: './todo-list.component.html',
 })
 export class TodoListComponent implements OnInit {
-  private todo;
+  todo$ = this.todoService.todo$;
+  todoSize$ = this.todo$
+      .pipe(map(item => item.size))
+  emptyTodo$ = this.todoSize$
+    .pipe(map(n => n === 0))
+
   constructor(private todoService: TodoListService) {}
 
-  ngOnInit() {
-    this.todoService.todo$.subscribe(todo => this.todo = todo);
-  }
+  ngOnInit() {}
 
   removeItem(item: string): void {
-    this.todoService.remove(item);
+    this.todoService.removeTodo$.next(item);
   }
 }
