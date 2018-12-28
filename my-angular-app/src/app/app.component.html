@@ -1,6 +1,5 @@
-<h1>Todo App</h1>
-
-<input type="text" [(ngModel)]="todoItem" (keydown.enter)="addTodo()">
-<input type="button" value="Add" (click)="addTodo()">
-
-<todo-list></todo-list>
+<ul>
+  <li *ngFor="let num of number$ | async">{{num}}</li>
+</ul>
+<input type="button" (click)="add()" value="Add 4">
+<input type="button" (click)="remove()" value="Remove 4">
