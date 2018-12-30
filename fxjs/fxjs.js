@@ -1,29 +1,56 @@
 const isIterable = a => a && a[Symbol.iterator];
+const isPromise = a => a instanceof Promise;
+const nop = Symbol('nop');
 
 const curry = f => (x, y) => {
   return y ? f(x, y) : y => f(x, y);
 };
-const reduce = curry((reducer, accumulator, iterable) => {
+const go1 = (a, f) => isPromise(a) ? a.then(f) : f(a);
+const reduce = curry((reducer, acc, iterable) => {
   if (!iterable) {
-    iterable = accumulator[Symbol.iterator]();
-    accumulator = iterable.next().value;
+    iterable = acc[Symbol.iterator]();
+    acc = iterable.next().value;
   }
-  for (const a of iterable) {
-    accumulator = reducer(accumulator, a);
-  }
-  return accumulator;
+  return go1(acc, function recur(acc) {
+    let cur;
+    while (!(cur = iterable.next()).done) {
+      const a = cur.value;
+      acc = reducer(acc, a);
+      if (isPromise(acc)) {
+        return acc.then(recur);
+      }
+    }
+    return acc;
+  });
 });
 const go = (...args) => reduce((a, f) => f(a), args);
 const pipe = (f, ...fs) => (...args) => go(f(...args), ...fs);
 const take = curry((limit, iterable) => {
   let res = [];
-  for (const a of iterable) {
-    res.push(a);
-    if (res.length === limit) return res;
-  }
-  return res;
+  iterable = iterable[Symbol.iterator]();
+  return function recur() {
+    let cur;
+    while (!(cur = iterable.next()).done) {
+      const a = cur.value;
+      if (a instanceof Promise) {
+        return a
+          .then(a => {
+            res.push(a);
+            if (res.length === limit) return res;
+            return recur();
+          })
+          .catch(e => e === nop ? recur() : Promise.reject(e))
+      }
+      res.push(a);
+      if (res.length === limit) return res;
+    }
+    return res;
+  }();
 });
 const takeAll = pipe(take(Infinity));
+
+const C = {};
+C.take = curry((limit, iterable) => take(limit, [...iterable]));
 
 const L = {};
 L.range = function *(l) {
@@ -35,12 +62,19 @@ L.range = function *(l) {
 
 L.map = curry(function *(mapper, iterable) {
   for (const a of iterable) {
-    yield mapper(a);
+    yield go1(a, mapper);
   }
 });
 L.filter = curry(function *(predicate, iterable) {
   for (const a of iterable) {
-    if (predicate(a)) yield a;
+    const b = go1(a, predicate);
+    if (b instanceof Promise) {
+      yield b.then(b => b ? a : Promise.reject(nop))
+    } else {
+      if (predicate(a)) {
+        yield a;
+      }
+    }
   }
 });
 L.entries = function *(obj) {
@@ -100,10 +134,6 @@ const queryStr = pipe(
   join('&')
 );
 
-const go1 = (a, f) => {
-  return a instanceof Promise ? a.then(f) : f(a);
-}
-
 module.exports = {
   isIterable,
   curry,
@@ -120,5 +150,6 @@ module.exports = {
   find,
   queryStr,
   go1,
-  L
+  L,
+  C
 }
