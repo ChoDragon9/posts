@@ -1,3 +1,5 @@
+const isIterable = a => a && a[Symbol.iterator];
+
 const curry = f => (a, ..._) => {
   return _.length ? f(a, ..._) : (..._) => f(a, ..._);
 };
@@ -11,7 +13,7 @@ const take = curry((limit, iterable) => {
   }
   return res;
 });
-const takeAll = (iterable) => take(Infinity, iterable);
+const takeAll = pipe(take(Infinity));
 
 const L = {};
 L.range = function *(l) {
@@ -33,6 +35,24 @@ L.filter = curry(function *(predicate, iterable) {
 });
 L.entries = function *(obj) {
   for (const k in obj) yield [k, obj[k]];
+};
+L.flatten = function *(iterable) {
+  for (const a of iterable) {
+    if (isIterable(a)) {
+      yield *a;
+    } else {
+      yield a;
+    }
+  }
+};
+L.deepFlat = function *f(iterable) {
+  for (const a of iterable) {
+    if (isIterable(a)) {
+      yield *f(a);
+    } else {
+      yield a;
+    }
+  }
 };
 
 const map = curry(pipe(L.map, takeAll));
@@ -80,3 +100,9 @@ const evaluate = (name, time, f) => {
 }
 const add = (a, b) => a + b;
 const log = console.log;
+
+go(
+  L.deepFlat([[1, 2], 3, 4, [5], [[6]]]),
+  takeAll,
+  log
+)
