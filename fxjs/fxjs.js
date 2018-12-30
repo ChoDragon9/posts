@@ -1,8 +1,18 @@
 const isIterable = a => a && a[Symbol.iterator];
 
-const curry = f => (a, ..._) => {
-  return _.length ? f(a, ..._) : (..._) => f(a, ..._);
+const curry = f => (x, y) => {
+  return y ? f(x, y) : y => f(x, y);
 };
+const reduce = curry((reducer, accumulator, iterable) => {
+  if (!iterable) {
+    iterable = accumulator[Symbol.iterator]();
+    accumulator = iterable.next().value;
+  }
+  for (const a of iterable) {
+    accumulator = reducer(accumulator, a);
+  }
+  return accumulator;
+});
 const go = (...args) => reduce((a, f) => f(a), args);
 const pipe = (f, ...fs) => (...args) => go(f(...args), ...fs);
 const take = curry((limit, iterable) => {
@@ -64,16 +74,6 @@ const flatMap = curry(pipe(L.flatMap, takeAll))
 
 const map = curry(pipe(L.map, takeAll));
 const filter = curry(pipe(L.filter, takeAll));
-const reduce = curry((reducer, accumulator, iterable) => {
-  if (!iterable) {
-    iterable = accumulator[Symbol.iterator]();
-    accumulator = iterable.next().value;
-  }
-  for (const a of iterable) {
-    accumulator = reducer(accumulator, a);
-  }
-  return accumulator;
-});
 
 const range = l => {
   let i = -1;
@@ -98,17 +98,27 @@ const queryStr = pipe(
   L.entries,
   L.map(([k, v]) => `${k}=${v}`),
   join('&')
-)
+);
 
-const evaluate = (name, time, f) => {
-  console.time(name);
-  while(time--) f();
-  console.timeEnd(name);
+const go1 = (a, f) => {
+  return a instanceof Promise ? a.then(f) : f(a);
 }
-const add = (a, b) => a + b;
-const log = console.log;
 
-go(
-  flatMap(v => v * 10, [[1, 2], 3, 4, [5], [[6]]]),
-  log
-)
+module.exports = {
+  isIterable,
+  curry,
+  go,
+  pipe,
+  take,
+  takeAll,
+  flatMap,
+  map,
+  filter,
+  reduce,
+  range,
+  join,
+  find,
+  queryStr,
+  go1,
+  L
+}
