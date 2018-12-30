@@ -55,14 +55,6 @@ const take = curry((limit, iterable) => {
 });
 const takeAll = pipe(take(Infinity));
 
-const C = {};
-C.take = curry((limit, iterable) => take(limit, [...iterable]));
-C.reduce = curry((reducer, acc, iterable) => {
-  return iterable ?
-    reduce(reducer, acc, [...iterable]) :
-    reduce(reducer, [...acc]);
-});
-
 const L = {};
 L.range = function *(l) {
   let i = -1;
@@ -114,6 +106,16 @@ L.flatMap = curry((mapper, iterable) => go(
   L.flatten,
   L.map(mapper)
 ));
+
+const C = {};
+C.take = curry((limit, iterable) => take(limit, [...iterable]));
+C.reduce = curry((reducer, acc, iterable) => {
+  return iterable ?
+    reduce(reducer, acc, [...iterable]) :
+    reduce(reducer, [...acc]);
+});
+C.map = curry((mapper, iterable) => map(mapper, [...iterable]));
+C.filter = curry((predicate, iterable) => filter(predicate, [...iterable]));
 
 const flatMap = curry(pipe(L.flatMap, takeAll))
 

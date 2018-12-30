@@ -52,8 +52,8 @@ go(
   L.range(1000),
   tap(() => console.time('Concurrency')),
   L.map(delay(1000)),
-  L.filter(v => v < 2),
-  C.reduce((a, b) => a + b),
+  L.map(v => v * v),
+  C.filter(v => v < 10),
   tap(() => console.timeEnd('Concurrency')),
   log
 );
