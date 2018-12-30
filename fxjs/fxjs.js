@@ -6,6 +6,13 @@ const curry = f => (x, y) => {
   return y ? f(x, y) : y => f(x, y);
 };
 const go1 = (a, f) => isPromise(a) ? a.then(f) : f(a);
+
+const reduceF = (acc, a, f) =>
+  a instanceof Promise ?
+    a.then(
+      a => f(acc, a),
+      e => e === nop ? acc : Promise.reject(e)
+    ) : f(acc, a);
 const reduce = curry((reducer, acc, iterable) => {
   if (!iterable) {
     iterable = acc[Symbol.iterator]();
@@ -14,8 +21,7 @@ const reduce = curry((reducer, acc, iterable) => {
   return go1(acc, function recur(acc) {
     let cur;
     while (!(cur = iterable.next()).done) {
-      const a = cur.value;
-      acc = reducer(acc, a);
+      acc = reduceF(acc, cur.value, reducer);
       if (isPromise(acc)) {
         return acc.then(recur);
       }
@@ -51,6 +57,11 @@ const takeAll = pipe(take(Infinity));
 
 const C = {};
 C.take = curry((limit, iterable) => take(limit, [...iterable]));
+C.reduce = curry((reducer, acc, iterable) => {
+  return iterable ?
+    reduce(reducer, acc, [...iterable]) :
+    reduce(reducer, [...acc]);
+});
 
 const L = {};
 L.range = function *(l) {
@@ -134,6 +145,8 @@ const queryStr = pipe(
   join('&')
 );
 
+const tap = curry((f, a) => (f(a), a));
+
 module.exports = {
   isIterable,
   curry,
@@ -150,6 +163,7 @@ module.exports = {
   find,
   queryStr,
   go1,
+  tap,
   L,
   C
 }

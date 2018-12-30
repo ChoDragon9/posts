@@ -5,6 +5,7 @@ const {
   filter,
   take,
   reduce,
+  tap,
   L,
   C
 } = require('./fxjs');
@@ -17,11 +18,42 @@ const delay = ms => (a) => new Promise(resolve => {
   }, ms);
 });
 
-console.time('Concurrency');
+// go(
+//   range(4),
+//   tap(() => console.time('Strict')),
+//   map(delay(1000)),
+//   filter(v => v < 2),
+//   take(3),
+//   tap(() => console.timeEnd('Strict')),
+//   log
+// );
+//
+// go(
+//   L.range(1000),
+//   tap(() => console.time('Lazy')),
+//   L.map(delay(1000)),
+//   L.filter(v => v < 10),
+//   take(3),
+//   tap(() => console.timeEnd('Lazy')),
+//   log
+// );
+//
+// go(
+//   L.range(1000),
+//   tap(() => console.time('Concurrency')),
+//   L.map(delay(1000)),
+//   L.filter(v => v < 2),
+//   C.take(3),
+//   tap(() => console.timeEnd('Concurrency')),
+//   log
+// );
+
 go(
   L.range(1000),
+  tap(() => console.time('Concurrency')),
   L.map(delay(1000)),
   L.filter(v => v < 2),
-  C.take(3),
-  (v) => (console.timeEnd('Concurrency'), log(v))
+  C.reduce((a, b) => a + b),
+  tap(() => console.timeEnd('Concurrency')),
+  log
 );
