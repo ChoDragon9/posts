@@ -54,6 +54,13 @@ L.deepFlat = function *f(iterable) {
     }
   }
 };
+L.flatMap = curry((mapper, iterable) => go(
+  iterable,
+  L.flatten,
+  L.map(mapper)
+));
+
+const flatMap = curry(pipe(L.flatMap, takeAll))
 
 const map = curry(pipe(L.map, takeAll));
 const filter = curry(pipe(L.filter, takeAll));
@@ -102,7 +109,6 @@ const add = (a, b) => a + b;
 const log = console.log;
 
 go(
-  L.deepFlat([[1, 2], 3, 4, [5], [[6]]]),
-  takeAll,
+  flatMap(v => v * 10, [[1, 2], 3, 4, [5], [[6]]]),
   log
 )
