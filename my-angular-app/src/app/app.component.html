@@ -1,3 +1,12 @@
 <input type="text" [formControl]="name">
 
 <div>{{name$ | async}}</div>
+<hr>
+<input type="button" (click)="addConfig()" value="add">
+<ul *ngFor="let cf of config.controls">
+  <li><input type="text" [formControl]="cf"></li>
+</ul>
+<hr>
+<input type="button" (click)="save()" value="save">
+<hr>
+<input type="button" (click)="save$()" value="save$">
