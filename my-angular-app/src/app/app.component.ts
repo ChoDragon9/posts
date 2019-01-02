@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
-import {of, forkJoin, BehaviorSubject, Subject, Observable, combineLatest} from 'rxjs';
-import {map, share, take, scan, filter, merge, mergeMap, mergeMapTo, withLatestFrom, tap, zip, publishBehavior, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
+import {map, take, scan, withLatestFrom, tap} from 'rxjs/operators';
 import {FormControl, FormArray} from '@angular/forms';
 
 function hotObservable<T>(value: T): BehaviorSubject<T> {
   return new BehaviorSubject<T>(value);
+}
+
+interface Setting {
+  name: string;
+  config: string[]
 }
 
 @Component({
@@ -12,62 +17,35 @@ function hotObservable<T>(value: T): BehaviorSubject<T> {
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  bot = {
-    name: 'Hello',
-    config: [
-      'hello',
-      'world'
-    ]
-  };
-
-  botSubject$: BehaviorSubject<Object>;
+  settingSubject$: BehaviorSubject<Setting>;
   nameSubject$: BehaviorSubject<string>;
   configSubject$: BehaviorSubject<string[]>;
-  bot$: Observable<Object>;
+  setting$: Observable<Setting>;
   name$: Observable<string>;
   config$: Observable<string[]>;
-
-  addConfig() {
-    this.config.push(new FormControl(''));
-  }
-
-  save() {
-    console.log(this.name.value);
-    console.log(this.config.value);
-  }
-
-  save$() {
-    this.bot$.pipe(take(1)).subscribe(console.log);
-  }
 
   name: FormControl;
   config: FormArray;
 
-  view(bot) {
-    this.name = new FormControl(bot.name);
-    this.config = new FormArray(bot.config.map(config => new FormControl(config)));
-    this.name.valueChanges.subscribe(this.nameSubject$);
-    this.config.valueChanges.subscribe(this.configSubject$);
+  constructor() {
+    const setting: Setting = {
+      name: 'Hello',
+      config: [
+        'hello',
+        'world'
+      ]
+    };
+    this.intent(setting);
+    this.model();
+    this.view(setting);
   }
 
-  model() {
-    combineLatest(this.name$, this.config$)
-      .pipe(
-        withLatestFrom(this.bot$),
-        map(([[name, config], bot]) => {
-          return Object.assign(bot, {name, config});
-        }),
-        tap(console.log)
-      )
-      .subscribe(this.botSubject$)
-  }
-
-  intent(bot) {
-    this.botSubject$ = hotObservable<Object>(bot);
-    this.nameSubject$  = hotObservable<string>(bot.name);
-    this.configSubject$ = hotObservable<string[]>(bot.config);
-    this.bot$ = this.botSubject$.pipe(
-      scan((acc, bot: Object) => bot)
+  intent(setting) {
+    this.settingSubject$ = hotObservable<Setting>(setting);
+    this.nameSubject$  = hotObservable<string>(setting.name);
+    this.configSubject$ = hotObservable<string[]>(setting.config);
+    this.setting$ = this.settingSubject$.pipe(
+      scan((acc, setting: Setting) => setting)
     );
     this.name$ = this.nameSubject$.pipe(
       scan((acc, numbers: string) => numbers)
@@ -77,9 +55,30 @@ export class AppComponent {
     );
   }
 
-  constructor() {
-    this.intent(this.bot);
-    this.model();
-    this.view(this.bot);
+  model() {
+    combineLatest(this.name$, this.config$)
+      .pipe(
+        withLatestFrom(this.setting$),
+        map(([[name, config], setting]) => {
+          return Object.assign(setting, {name, config});
+        }),
+        tap(console.log)
+      )
+      .subscribe(this.settingSubject$)
+  }
+
+  view(setting) {
+    this.name = new FormControl(setting.name);
+    this.config = new FormArray(setting.config.map(config => new FormControl(config)));
+    this.name.valueChanges.subscribe(this.nameSubject$);
+    this.config.valueChanges.subscribe(this.configSubject$);
+  }
+
+  addConfig() {
+    this.config.push(new FormControl(''));
+  }
+
+  save$() {
+    this.setting$.pipe(take(1)).subscribe(console.log);
   }
 }
