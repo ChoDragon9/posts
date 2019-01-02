@@ -81,14 +81,5 @@ export class AppComponent {
     this.intent(this.bot);
     this.model();
     this.view(this.bot);
-
-    // forkJoin(this.name$, this.config$)
-    //   .pipe(
-    //     map(([name, config]) => {
-    //       return Object.assign(this.bot, {name, config})
-    //     }),
-    //     tap(console.log)
-    //   )
-    //   .subscribe(this.botSubject$)
   }
 }
