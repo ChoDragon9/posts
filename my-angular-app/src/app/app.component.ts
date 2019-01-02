@@ -20,9 +20,9 @@ export class AppComponent {
     ]
   };
 
-  botSubject$: BehaviorSubject<Object> = hotObservable<Object>({});
-  nameSubject$: BehaviorSubject<string> = hotObservable<string>('');
-  configSubject$: BehaviorSubject<string[]> = hotObservable<string[]>([]);
+  botSubject$: BehaviorSubject<Object>;
+  nameSubject$: BehaviorSubject<string>;
+  configSubject$: BehaviorSubject<string[]>;
   bot$: Observable<Object>;
   name$: Observable<string>;
   config$: Observable<string[]>;
@@ -62,22 +62,25 @@ export class AppComponent {
       .subscribe(this.botSubject$)
   }
 
-  intent() {
+  intent(bot) {
+    this.botSubject$ = hotObservable<Object>(bot);
+    this.nameSubject$  = hotObservable<string>(bot.name);
+    this.configSubject$ = hotObservable<string[]>(bot.config);
     this.bot$ = this.botSubject$.pipe(
-      scan((acc, bot: Object) => bot, {})
+      scan((acc, bot: Object) => bot)
     );
     this.name$ = this.nameSubject$.pipe(
-      scan((acc, numbers: string) => numbers, '')
+      scan((acc, numbers: string) => numbers)
     );
     this.config$ = this.configSubject$.pipe(
-      scan((acc, config: string[]) => config, [])
+      scan((acc, config: string[]) => config)
     );
   }
 
   constructor() {
-    this.view(this.bot);
-    this.intent();
+    this.intent(this.bot);
     this.model();
+    this.view(this.bot);
 
     // forkJoin(this.name$, this.config$)
     //   .pipe(
