@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {of, forkJoin, BehaviorSubject, Subject, Observable, combineLatest} from 'rxjs';
-import {map, share, take, scan, filter, merge, mergeMap, mergeMapTo, withLatestFrom, tap, zip, publishBehavior} from 'rxjs/operators';
+import {map, share, take, scan, filter, merge, mergeMap, mergeMapTo, withLatestFrom, tap, zip, publishBehavior, switchMap} from 'rxjs/operators';
 import {FormControl, FormArray} from '@angular/forms';
 
 function hotObservable<T>(value: T): BehaviorSubject<T> {
@@ -53,8 +53,9 @@ export class AppComponent {
   model() {
     combineLatest(this.name$, this.config$)
       .pipe(
-        map(([name, config]) => {
-          return Object.assign(this.bot, {name, config})
+        withLatestFrom(this.bot$),
+        map(([[name, config], bot]) => {
+          return Object.assign(bot, {name, config});
         }),
         tap(console.log)
       )
