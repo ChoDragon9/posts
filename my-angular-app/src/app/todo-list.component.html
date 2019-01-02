@@ -1,8 +1,0 @@
-<h3>Todo list</h3>
-<p *ngIf="emptyTodo$ | async">Todo is empty.</p>
-<ul *ngIf="todoSize$ | async">
-  <li *ngFor="let item of todo$ | async">
-    {{item}}
-    <input type="button" value="X" (click)="removeItem(item)">
-  </li>
-</ul>
