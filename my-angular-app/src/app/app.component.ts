@@ -3,9 +3,12 @@ import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {map, take, scan, withLatestFrom, tap} from 'rxjs/operators';
 import {FormControl, FormArray} from '@angular/forms';
 
-function hotObservable<T>(value: T): BehaviorSubject<T> {
+function createHot$<T>(value: T): BehaviorSubject<T> {
   return new BehaviorSubject<T>(value);
 }
+const assign = (target, ...source) => Object.assign(target, ...source);
+const createFormControl = (val: any) => new FormControl(val);
+const createFormArray = (arr: any[]) => new FormArray(arr);
 
 interface Setting {
   name: string;
@@ -41,18 +44,22 @@ export class AppComponent {
   }
 
   intent(setting) {
-    this.settingSubject$ = hotObservable<Setting>(setting);
-    this.nameSubject$  = hotObservable<string>(setting.name);
-    this.configSubject$ = hotObservable<string[]>(setting.config);
-    this.setting$ = this.settingSubject$.pipe(
-      scan((acc, setting: Setting) => setting)
-    );
-    this.name$ = this.nameSubject$.pipe(
-      scan((acc, numbers: string) => numbers)
-    );
-    this.config$ = this.configSubject$.pipe(
-      scan((acc, config: string[]) => config)
-    );
+    assign(this, {
+      settingSubject$: createHot$<Setting>(setting),
+      nameSubject$: createHot$<string>(setting.name),
+      configSubject$: createHot$<string[]>(setting.config),
+    });
+    assign(this, {
+      setting$: this.settingSubject$.pipe(
+        scan((acc, setting: Setting) => setting)
+      ),
+      name$: this.nameSubject$.pipe(
+        scan((acc, numbers: string) => numbers)
+      ),
+      config$: this.configSubject$.pipe(
+        scan((acc, config: string[]) => config)
+      )
+    });
   }
 
   model() {
@@ -67,15 +74,17 @@ export class AppComponent {
       .subscribe(this.settingSubject$)
   }
 
-  view(setting) {
-    this.name = new FormControl(setting.name);
-    this.config = new FormArray(setting.config.map(config => new FormControl(config)));
+  view({name, config}: Setting) {
+    assign(this, {
+      name: createFormControl(name),
+      config: createFormArray(config.map(createFormControl))
+    });
     this.name.valueChanges.subscribe(this.nameSubject$);
     this.config.valueChanges.subscribe(this.configSubject$);
   }
 
   addConfig() {
-    this.config.push(new FormControl(''));
+    this.config.push(createFormControl(''));
   }
 
   save$() {
