@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import {of, forkJoin, BehaviorSubject, Subject, Observable, combineLatest} from 'rxjs';
-import {map, share, take, scan, filter, merge, mergeMap, mergeMapTo, withLatestFrom, tap, zip} from 'rxjs/operators';
+import {map, share, take, scan, filter, merge, mergeMap, mergeMapTo, withLatestFrom, tap, zip, publishBehavior} from 'rxjs/operators';
 import {FormControl, FormArray} from '@angular/forms';
+
+function hotObservable<T>(value: T): BehaviorSubject<T> {
+  return new BehaviorSubject<T>(value);
+}
 
 @Component({
   selector: 'app-root',
@@ -16,9 +20,9 @@ export class AppComponent {
     ]
   };
 
-  botSubject$: BehaviorSubject<Object> = new BehaviorSubject<Object>({});
-  nameSubject$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  configSubject$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  botSubject$: BehaviorSubject<Object> = hotObservable<Object>({});
+  nameSubject$: BehaviorSubject<string> = hotObservable<string>('');
+  configSubject$: BehaviorSubject<string[]> = hotObservable<string[]>([]);
   bot$: Observable<Object>;
   name$: Observable<string>;
   config$: Observable<string[]>;
@@ -39,9 +43,11 @@ export class AppComponent {
   name: FormControl;
   config: FormArray;
 
-  view() {
-    this.name = new FormControl(this.bot.name);
-    this.config = new FormArray(this.bot.config.map(config => new FormControl(config)));
+  view(bot) {
+    this.name = new FormControl(bot.name);
+    this.config = new FormArray(bot.config.map(config => new FormControl(config)));
+    this.name.valueChanges.subscribe(this.nameSubject$);
+    this.config.valueChanges.subscribe(this.configSubject$);
   }
 
   model() {
@@ -65,12 +71,10 @@ export class AppComponent {
     this.config$ = this.configSubject$.pipe(
       scan((acc, config: string[]) => config, [])
     );
-    this.name.valueChanges.subscribe(this.nameSubject$);
-    this.config.valueChanges.subscribe(this.configSubject$);
   }
 
   constructor() {
-    this.view();
+    this.view(this.bot);
     this.intent();
     this.model();
 
