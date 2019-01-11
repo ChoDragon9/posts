@@ -1,0 +1,8 @@
+<input type="text" [formControl]="name">
+<hr>
+<input type="button" (click)="addConfig()" value="add">
+<ul *ngFor="let cf of config.controls">
+  <li><input type="text" [formControl]="cf"></li>
+</ul>
+<hr>
+<input type="button" (click)="save$()" value="save$">

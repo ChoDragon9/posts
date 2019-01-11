@@ -1,8 +1,47 @@
-<input type="text" [formControl]="name">
-<hr>
-<input type="button" (click)="addConfig()" value="add">
-<ul *ngFor="let cf of config.controls">
-  <li><input type="text" [formControl]="cf"></li>
-</ul>
-<hr>
-<input type="button" (click)="save$()" value="save$">
+<div>
+  <button
+    type="button"
+    (click)="layer1.toggle()"
+    *ngIf="!layer1.isShow">Open</button>
+  <div *ngIf="layer1.isShow">
+    <button
+      type="button"
+      (click)="layer1.toggle()">Close</button>
+    <ul>
+      <li><a href="#">Menu1</a></li>
+      <li><a href="#">Menu2</a></li>
+    </ul>
+  </div>
+</div>
+
+<div>
+  <button
+    type="button"
+    (click)="layer2.toggle()"
+    *ngIf="!layer2.isShow">Open</button>
+  <div *ngIf="layer2.isShow">
+    <button
+      type="button"
+      (click)="layer2.toggle()">Close</button>
+    <ul>
+      <li><a href="#">Menu1</a></li>
+      <li><a href="#">Menu2</a></li>
+    </ul>
+  </div>
+</div>
+
+<div>
+  <button
+    type="button"
+    (click)="layer3.toggle()"
+    *ngIf="!layer3.isShow">Open</button>
+  <div *ngIf="layer3.isShow">
+    <button
+      type="button"
+      (click)="layer3.toggle()">Close</button>
+    <ul>
+      <li><a href="#">Menu1</a></li>
+      <li><a href="#">Menu2</a></li>
+    </ul>
+  </div>
+</div>
