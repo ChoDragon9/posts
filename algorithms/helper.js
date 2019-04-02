@@ -7,7 +7,7 @@ const test = ({find, map, startPoint, endPoint, result}) => {
     console.log(`[${count++}][Success]`, startPoint, endPoint)
   } else {
     console.log(`[${count++}][Fail]`, startPoint, endPoint)
-    console.log('path', path)
+    console.log('path  ', path)
     console.log('result', resultPath)
     console.log('-----------------------')
   }
