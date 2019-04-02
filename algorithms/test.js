@@ -1,4 +1,5 @@
 const {test} = require('./helper')
+const {find} = require('./dfs')
 
 const MAP = [
   [0, 1, 1, 0],
@@ -8,6 +9,7 @@ const MAP = [
 ];
 
 test({
+  find,
   map: MAP,
   startPoint: [2, 3],
   endPoint: [3, 3],
@@ -17,6 +19,7 @@ test({
 });
 
 test({
+  find,
   map: MAP,
   startPoint: [1, 2],
   endPoint: [2, 3],
@@ -27,6 +30,7 @@ test({
 });
 
 test({
+  find,
   map: MAP,
   startPoint: [1, 2],
   endPoint: [0, 0],
@@ -36,6 +40,7 @@ test({
 });
 
 test({
+  find,
   map: MAP,
   startPoint: [0, 0],
   endPoint: [1, 1],
@@ -45,6 +50,7 @@ test({
 });
 
 test({
+  find,
   map: MAP,
   startPoint: [0, 0],
   endPoint: [3, 3],
@@ -55,6 +61,7 @@ test({
 });
 
 test({
+  find,
   map: MAP,
   startPoint: [0, 0],
   endPoint: [2, 3],

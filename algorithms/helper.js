@@ -1,7 +1,6 @@
-const {find} = require('./dfs')
 let count = 1
 
-const test = ({map, startPoint, endPoint, result}) => {
+const test = ({find, map, startPoint, endPoint, result}) => {
   const path = toStr(find(map, startPoint, endPoint))
   const resultPath = toStr(result)
   if (path === resultPath) {
