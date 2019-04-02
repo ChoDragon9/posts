@@ -10,6 +10,22 @@ const MAP = [
 
 test({
   find,
+  map: [
+    [0, 1, 1, 0],
+    [0, 0, 0, 0],
+    [1, 0, 1, 0],
+    [1, 0, 1, 0],
+    [1, 0, 0, 0],
+  ],
+  startPoint: [0, 0],
+  endPoint: [3, 1],
+  result: [
+    [0, 0], [1, 0], [1, 1], [2, 1], [3, 1],
+  ]
+});
+
+test({
+  find,
   map: MAP,
   startPoint: [2, 3],
   endPoint: [3, 3],
