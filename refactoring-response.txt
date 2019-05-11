@@ -3,68 +3,68 @@
 변경하기 쉬운 컴포넌트부터 리펙토링을 시작한다.
 
 [UI]
-- 봇 응답형식 설정
-- 탭(카카오톡, 카카오미니)
-- 응답 카드 그룹
-    - {각 응답 카드들}
-- 바로연결 버튼 설정
-- 응답 추가
+봇 응답형식 설정 타이틀
+탭{카카오톡, 카카오미니}
+응답 카드 그룹
+  {각 응답 카드들}
+바로연결 버튼 설정
+각 응답 카드 추가 기능
 
 [AS IS]
 ResponseComponent
-- Title
-- Tab
-- [Component] MiNiArea
-- [ngFor] responseCardGroups
-    - [Dragular]
-        - [Component] CarouselHeadCard
-        - [Component] SimpleTextCard
-        - [Component] ImageTitleTextResponseCard
-        - [Component] CommerceResponseCard
-    - [Component] TextResponseCard
-    - [Component] ImageResponseCard
-    - [Component] ComplexResponseCard
-    - [Component] SmallTextCard
-    - [Component] SkillResponseCard
-    - [Component] MusicResponseCard
-    - [Component] ListResponseCard
-    - AddResponseCard
-    - ResponseCardController
-- [Component] ResponseAddQuickreply
-- Using Skill Data
-- [Component] ResponseAddResponseType
+<title></title>
+<tab></tab>
+[Component] MiNiArea
+[ngFor] responseCardGroups
+    [Dragular]
+        [Component] CarouselHeadCard
+        [Component] SimpleTextCard
+        [Component] ImageTitleTextResponseCard
+        [Component] CommerceResponseCard
+    [Component] TextResponseCard
+    [Component] ImageResponseCard
+    [Component] ComplexResponseCard
+    [Component] SmallTextCard
+    [Component] SkillResponseCard
+    [Component] MusicResponseCard
+    [Component] ListResponseCard
+    AddResponseCard
+    ResponseCardController
+[Component] ResponseAddQuickreply
+<use-skill-data></use-skill-data>
+[Component] ResponseAddResponseType
 
 [TO BE]
 ResponseComponent
-- Title
-- Tab
-- [Component] ResponseTypeGroup
-- [Component] ResponseAddQuickreply
-- [Component] ResponseAddResponseType
+<title></title>
+<tab></tab>
+[Component] ResponseTypeGroup
+[Component] ResponseAddQuickreply
+[Component] ResponseAddResponseType
 
 ResponseTypeGroup
-- [Component] KakaoMiniResponse
-- [Component] KakaoTalkResponse
+[Component] KakaoMiniResponse
+[Component] KakaoTalkResponse
 
 KakaoMiniResponse
-- [Component] MiNiArea
+[Component] MiNiArea
 
 KakaoTalkResponse
-- [ngFor] responseCardGroups
-    - [Dragular]
-        - [Component] CarouselHeadCard
-        - [Component] SimpleTextCard
-        - [Component] ImageTitleTextResponseCard
-        - [Component] CommerceResponseCard
-    - [Component] TextResponseCard
-    - [Component] ImageResponseCard
-    - [Component] ComplexResponseCard
-    - [Component] SmallTextCard
-    - [Component] SkillResponseCard
-    - [Component] MusicResponseCard
-    - [Component] ListResponseCard
-    - AddResponseCard
-    - ResponseCardController
+[ngFor] responseCardGroups
+    [Dragular]
+        [Component] CarouselHeadCard
+        [Component] SimpleTextCard
+        [Component] ImageTitleTextResponseCard
+        [Component] CommerceResponseCard
+    [Component] TextResponseCard
+    [Component] ImageResponseCard
+    [Component] ComplexResponseCard
+    [Component] SmallTextCard
+    [Component] SkillResponseCard
+    [Component] MusicResponseCard
+    [Component] ListResponseCard
+    AddResponseCard
+    ResponseCardController
 
 ResponseAddResponseType
-- Using Skill Data
+<use-skill-data></use-skill-data>
