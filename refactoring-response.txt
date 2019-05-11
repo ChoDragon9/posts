@@ -1,0 +1,70 @@
+봇 응답형식 설정 리펙토링
+상위레벨의 컴포넌트의 역할이 많이 부여되있다. UI 기준으로 컴포넌트를 재설계하고
+변경하기 쉬운 컴포넌트부터 리펙토링을 시작한다.
+
+[UI]
+- 봇 응답형식 설정
+- 탭(카카오톡, 카카오미니)
+- 응답 카드 그룹
+    - {각 응답 카드들}
+- 바로연결 버튼 설정
+- 응답 추가
+
+[AS IS]
+ResponseComponent
+- Title
+- Tab
+- [Component] MiNiArea
+- [ngFor] responseCardGroups
+    - [Dragular]
+        - [Component] CarouselHeadCard
+        - [Component] SimpleTextCard
+        - [Component] ImageTitleTextResponseCard
+        - [Component] CommerceResponseCard
+    - [Component] TextResponseCard
+    - [Component] ImageResponseCard
+    - [Component] ComplexResponseCard
+    - [Component] SmallTextCard
+    - [Component] SkillResponseCard
+    - [Component] MusicResponseCard
+    - [Component] ListResponseCard
+    - AddResponseCard
+    - ResponseCardController
+- [Component] ResponseAddQuickreply
+- Using Skill Data
+- [Component] ResponseAddResponseType
+
+[TO BE]
+ResponseComponent
+- Title
+- Tab
+- [Component] ResponseTypeGroup
+- [Component] ResponseAddQuickreply
+- [Component] ResponseAddResponseType
+
+ResponseTypeGroup
+- [Component] KakaoMiniResponse
+- [Component] KakaoTalkResponse
+
+KakaoMiniResponse
+- [Component] MiNiArea
+
+KakaoTalkResponse
+- [ngFor] responseCardGroups
+    - [Dragular]
+        - [Component] CarouselHeadCard
+        - [Component] SimpleTextCard
+        - [Component] ImageTitleTextResponseCard
+        - [Component] CommerceResponseCard
+    - [Component] TextResponseCard
+    - [Component] ImageResponseCard
+    - [Component] ComplexResponseCard
+    - [Component] SmallTextCard
+    - [Component] SkillResponseCard
+    - [Component] MusicResponseCard
+    - [Component] ListResponseCard
+    - AddResponseCard
+    - ResponseCardController
+
+ResponseAddResponseType
+- Using Skill Data
