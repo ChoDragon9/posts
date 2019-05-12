@@ -39,8 +39,8 @@ ResponseComponent
 <title></title>
 <tab></tab>
 [Component] ResponseTypeGroup
-[Component] ResponseAddQuickreply
-[Component] ResponseAddResponseType
+[Component] QuickReplyComponent
+[Component] ResponseTypePanelComponent
 
 ResponseTypeGroup
 [Component] KakaoMiniResponse
@@ -66,5 +66,5 @@ KakaoTalkResponse
     AddResponseCard
     ResponseCardController
 
-ResponseAddResponseType
+ResponseTypePanelComponent
 <use-skill-data></use-skill-data>
