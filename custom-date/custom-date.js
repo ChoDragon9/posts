@@ -1,40 +1,90 @@
-class CustomDate extends Date {
-  addDate (count) {
-    this.setDate(this.getDate() + count)
+const toLong = num => `${num < 10 ? '0': ''}${num}`
+
+
+const LAST_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+const LEAP_YEAR_LAST_DATE = 29
+
+class BeeDate extends Date {
+	clone() {
+		return BeeDate.create(+this)
+	}
+
+	addDate(count) {
+		const clonedDate = this.clone()
+		clonedDate.setDate(clonedDate.getDate() + count)
+		return clonedDate
+	}
+
+	subtractDate(count) {
+		return this.addDate(-count)
+	}
+
+	getYesterday () {
+		return this.subtractDate(1)
+	}
+
+	format(mapper) {
+		const year = String(this.getFullYear())
+		const month = toLong(this.getMonth() + 1)
+		const date = toLong(this.getDate())
+		const hours = toLong(this.getHours())
+		const minutes = toLong(this.getMinutes())
+		const seconds = toLong(this.getSeconds())
+		return mapper({year, month, date, hours, minutes, seconds})
+	}
+
+	// range(afterDate: BeeDate): BeeDate[] {
+	// 	return [new BeeDate()]
+	// }
+
+	isSameDate(date) {
+		return [
+			this.getFullYear() === date.getFullYear(),
+			this.getMonth() === date.getMonth(),
+			this.getDate() === date.getDate()
+		].every(result => result)
+	}
+
+	isSameMonth(date) {
+		return [
+			this.getFullYear() === date.getFullYear(),
+			this.getMonth() === date.getMonth(),
+		].every(result => result)
+	}
+
+	isSameYear(date) {
+		return this.getFullYear() === date.getFullYear()
+	}
+
+	isLeapYear() {
+		const year = this.getFullYear()
+		const month = this.getMonth()
+		return (
+			(
+				year % 4 === 0 && year % 100 !== 0) ||
+				year % 400 === 0
+			) && month === 2
+	}
+
+	getLastDate() {
+		if (this.isLeapYear()) {
+			return LEAP_YEAR_LAST_DATE
+		}
+    return LAST_DAYS[this.getMonth()]
   }
-  subtractDate (count) {
-    this.addDate(-count)
-  }
-  isSame (date) {
-    return this.getId() === date.getId()
-  }
-  getId () {
-    return `${this.getFullYear()}-${this.getMonth() + 1}-${this.getDate()}`
-  }
-  static create (...args) {
-    return new CustomDate(...args)
-  }
+
+	static create(value) {
+		if (value) {
+			return new BeeDate(value)
+		}
+    return new BeeDate()
+	}
+
+	static createFromDate(year, month, date, hours, minutes, seconds, ms) {
+		const args = [year, month, date, hours, minutes, seconds, ms].filter(v => v)
+		return new BeeDate(...args)
+	}
 }
 
-// addDate(count: number)
-// subtractDate(count: number)
-// format (fn) => fn({year: string, month: string, date: string, hours: string, minutes: string, seconds: string})
-// isSameDay(): boolean
-// isSameMonth(): boolean
-// isSameYear(): boolean
-// isLeapYear(): boolean
-// getDateString(): YYYY-MM-DD
-// getDateRange(date: CustomDate): number
-// getDatePeriod(date: CustomDate): number
-// getLastDay(): number
-// getYesterday(): CustomDate
-// compareYear(date: CustomDate): number
-// compareMonth(date: CustomDate): number
-// compareDate(date: CustomDate): number
-// compareHours(date: CustomDate): number
-// compareMinutes(date: CustomDate): number
-// compareSeconds(date: CustomDate): number
-// durationMonth(date: CustomDate): {month, date}
-// static create(...args): CustomDate
 
-module.exports = CustomDate
+module.exports = {BeeDate}
