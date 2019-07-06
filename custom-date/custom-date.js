@@ -79,7 +79,8 @@ class BeeDate extends Date {
 	}
 
 	isLeapYear() {
-		return Math.abs(this.getFullYear() - LEAP_YEAR) % LEAP_YEAR_PERIOD === 0
+		const diffYear = Math.abs(this.getFullYear() - LEAP_YEAR)
+		return diffYear % LEAP_YEAR_PERIOD === 0
 	}
 
 	getLastDate() {
@@ -97,7 +98,8 @@ class BeeDate extends Date {
 	}
 
 	static createFromDate(year, month, date, hours, minutes, seconds, ms) {
-		const args = [year, month, date, hours, minutes, seconds, ms].filter(v => v !== undefined)
+		const args = [year, month, date, hours, minutes, seconds, ms]
+			.filter(v => v !== undefined)
 		return new BeeDate(...args)
 	}
 }
