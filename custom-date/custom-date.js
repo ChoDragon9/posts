@@ -25,6 +25,18 @@ class BeeDate extends Date {
 		return this.subtractDate(1)
 	}
 
+	formatDate (delimiter = '-') {
+		return this.format(({year, month, date}) => {
+			return [year, month, date].join(delimiter)
+		})
+	}
+
+	formatTime (delimiter = ':') {
+		return this.format(({hours, minutes, seconds}) => {
+			return [hours, minutes, seconds].join(delimiter)
+		})
+	}
+
 	format(mapper) {
 		const year = String(this.getFullYear())
 		const month = toLong(this.getMonth() + 1)

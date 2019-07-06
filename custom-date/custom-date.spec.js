@@ -161,6 +161,31 @@ log('getYesterday', () => {
 	return result.every(v => v)
 })
 
+
+log('formatDate - YYYY-MM-DD', () => {
+	const date = BeeDate.createFromDate(2019, 1, 2)
+
+	const result = date.formatDate('-')
+
+	return result === '2019-02-02'
+})
+
+log('formatDate - YYYY.MM.DD', () => {
+	const date = BeeDate.createFromDate(2019, 1, 2)
+
+	const result = date.formatDate('.')
+
+	return result === '2019.02.02'
+})
+
+log('formatTime - HH:mm:ss', () => {
+	const date = BeeDate.createFromDate(2019, 1, 2, 10, 11, 13)
+
+	const result = date.formatTime(':')
+
+	return result === '10:11:13'
+})
+
 log('format - YYYY-MM-DD', () => {
 	const date = BeeDate.createFromDate(2019, 1, 2)
 
