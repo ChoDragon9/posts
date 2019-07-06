@@ -1,8 +1,9 @@
 const toLong = num => `${num < 10 ? '0': ''}${num}`
 
 const LAST_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+const LEAP_YEAR = 2000
+const LEAP_YEAR_PERIOD = 4
 const LEAP_YEAR_LAST_DATE = 29
-
 const MAX_RANGE = 365
 
 class BeeDate extends Date {
@@ -52,18 +53,13 @@ class BeeDate extends Date {
 	}
 
 	isSameDate(date) {
-		return [
-			this.getFullYear() === date.getFullYear(),
-			this.getMonth() === date.getMonth(),
+		return this.isSameMonth(date) &&
 			this.getDate() === date.getDate()
-		].every(result => result)
 	}
 
 	isSameMonth(date) {
-		return [
-			this.getFullYear() === date.getFullYear(),
-			this.getMonth() === date.getMonth(),
-		].every(result => result)
+		return this.isSameYear(date) &&
+			this.getMonth() === date.getMonth()
 	}
 
 	isSameYear(date) {
@@ -71,13 +67,7 @@ class BeeDate extends Date {
 	}
 
 	isLeapYear() {
-		const year = this.getFullYear()
-		const month = this.getMonth()
-		return (
-			(
-				year % 4 === 0 && year % 100 !== 0) ||
-				year % 400 === 0
-			) && month === 2
+		return Math.abs(this.getFullYear() - LEAP_YEAR) % LEAP_YEAR_PERIOD === 0
 	}
 
 	getLastDate() {
