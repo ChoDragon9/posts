@@ -274,3 +274,34 @@ log('getLastDate - leap year', () => {
 
 	return result
 })
+
+log('range', () => {
+	const startDate = BeeDate.createFromDate(2016, 0, 1)
+	const endDate = BeeDate.createFromDate(2016, 0, 20)
+	const range = startDate.range(endDate)
+
+	const result = [
+		startDate.isSameDate(range[0]),
+		endDate.isSameDate(range[19]),
+	]
+
+	return result.every(v => v)
+})
+
+log('range - past', () => {
+	const startDate = BeeDate.createFromDate(2016, 0, 20)
+	const endDate = BeeDate.createFromDate(2016, 0, 1)
+
+	const result = startDate.range(endDate).length === 0
+
+	return result
+})
+
+log('range - limit 365', () => {
+	const startDate = BeeDate.createFromDate(2016, 0, 1)
+	const endDate = BeeDate.createFromDate(2017, 12, 31)
+
+	const result = startDate.range(endDate).length === 365
+
+	return result
+})

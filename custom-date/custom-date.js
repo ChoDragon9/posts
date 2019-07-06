@@ -1,8 +1,9 @@
 const toLong = num => `${num < 10 ? '0': ''}${num}`
 
-
 const LAST_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 const LEAP_YEAR_LAST_DATE = 29
+
+const MAX_RANGE = 365
 
 class BeeDate extends Date {
 	clone() {
@@ -33,9 +34,22 @@ class BeeDate extends Date {
 		return mapper({year, month, date, hours, minutes, seconds})
 	}
 
-	// range(afterDate: BeeDate): BeeDate[] {
-	// 	return [new BeeDate()]
-	// }
+	range(afterDate) {
+		if (this > afterDate) {
+			return []
+		}
+		const dates = []
+		let limit = 0
+		let date = this.clone()
+
+		dates.push(date)
+		while (!afterDate.isSameDate(date) && ++limit < MAX_RANGE) {
+			date = date.addDate(1)
+			dates.push(date)
+		}
+
+		return dates
+	}
 
 	isSameDate(date) {
 		return [
@@ -81,7 +95,7 @@ class BeeDate extends Date {
 	}
 
 	static createFromDate(year, month, date, hours, minutes, seconds, ms) {
-		const args = [year, month, date, hours, minutes, seconds, ms].filter(v => v)
+		const args = [year, month, date, hours, minutes, seconds, ms].filter(v => v !== undefined)
 		return new BeeDate(...args)
 	}
 }
