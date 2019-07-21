@@ -1,20 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+
+@Injectable()
+export class MyService {
+  constructor(private http: HttpClient) { }
+  fetchConfig() {
+    return this.http.get('/path/to/config')
+  }
+}
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  layer1 = new LayerHelper();
-  layer2 = new LayerHelper();
-  layer3 = new LayerHelper();
-  constructor() {}
+  constructor(private myService: MyService) {}
+  onClick () {
+    this.myService.fetchConfig()
+  }
 }
 
-class LayerHelper {
-  isShow = false;
-  toggle() {
-    this.isShow = !this.isShow;
-  }
-  constructor() {}
-}
+// @Pipe({name: 'exponentialStrength'})
+// export class ExponentialStrengthPipe implements PipeTransform {
+//   transform(value: number, exponent?: number): number {
+//     return Math.pow(value, isNaN(exponent) ? 1 : exponent);
+//   }
+// }
