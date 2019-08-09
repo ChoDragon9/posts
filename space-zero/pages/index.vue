@@ -12,14 +12,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from 'nuxt-property-decorator'
 import MyTitle from '~/components/MyTitle.vue'
 
-export default {
+@Component({
   components: {
     MyTitle
   }
-}
+})
+class Page extends Vue {}
+
+export default Page
 </script>
 
 <style>

@@ -1,24 +1,19 @@
 <template>
-  <h1 class="title">
-    {{ myTitle }} {{ desc }}
-  </h1>
+  <h1 class="title">{{ title }} {{ desc }}</h1>
 </template>
 
-<script>
-export default {
-  props: {
-    title: {
-      type: String,
-      required: true
-    }
-  },
-  data() {
-    return {
-      myTitle: this.title,
-      desc: '설명'
-    }
-  }
+<script lang="ts">
+import { Component, Prop, Vue } from 'nuxt-property-decorator'
+
+@Component({})
+class MyTitle extends Vue {
+  @Prop({
+    required: true
+  })
+  title
+  desc = '설명'
 }
+export default MyTitle
 </script>
 
 <style>

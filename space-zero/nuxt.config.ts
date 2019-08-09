@@ -1,4 +1,6 @@
-module.exports = {
+import NuxtConfiguration from '@nuxt/config'
+
+const config: NuxtConfiguration = {
   mode: 'spa',
   /*
    ** Headers of the page
@@ -49,3 +51,5 @@ module.exports = {
     extend(config, ctx) {}
   }
 }
+
+export default config
