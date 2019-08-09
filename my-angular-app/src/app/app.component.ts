@@ -3,20 +3,37 @@ import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class MyService {
-  constructor(private http: HttpClient) { }
-  fetchConfig() {
-    return this.http.get('/path/to/config')
+  count = 0
+  constructor() {
+    setInterval(() => {
+      this.count++
+    }, 1000)
+  }
+}
+
+@Component({
+  selector: 'child-component',
+  template: '<div>{{count}}</div>'
+})
+export class ChildComponent {
+  constructor(private myService: MyService) {}
+  get count () {
+    return this.myService.count
   }
 }
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
+  template: `<div>
+    {{count}}
+    <child-component></child-component>
+  </div>`,
 })
 export class AppComponent {
-  constructor(private myService: MyService) {}
-  onClick () {
-    this.myService.fetchConfig()
+  constructor(private myService: MyService) {
+  }
+  get count () {
+    return this.myService.count
   }
 }
 
