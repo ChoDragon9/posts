@@ -1,2 +1,5 @@
 .idea
+./node_modules
 RxJS-FP/node_modules
+express-server/node_modules
+my-app/node_modules
