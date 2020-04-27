@@ -1,12 +1,12 @@
-- [Docker](Docker)
-- [Kubernetes](Kubernetes)
-  - [Service](Kubernetes-Service)
+- [Docker](Docker.md)
+- [Kubernetes](Kubernetes.md)
+  - [Service](Kubernetes-Service.md)
   - 공식 한글 문서
-    - [쿠버네티스란 무엇인가](쿠버네티스란-무엇인가)
-    - [k8s 구성 모범 사례](k8s-구성-모범-사례)
+    - [쿠버네티스란 무엇인가](쿠버네티스란-무엇인가.md)
+    - [k8s 구성 모범 사례](k8s-구성-모범-사례.md)
 - 경험 만들기
-  - [Docker 배포 해보기](Docker-배포-해보기)
-  - [k8s deployment, ingress yaml](k8s-deployment-ingress-yaml)
+  - [Docker 배포 해보기](Docker-배포-해보기.md)
+  - [k8s deployment, ingress yaml](k8s-deployment-ingress-yaml.md)
 
 ### 서버 인프라 구성 방식에 따른 비교
 - On-Premises
