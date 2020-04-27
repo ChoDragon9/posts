@@ -34,7 +34,7 @@
 - Live Template: 반복되는 타이핑을 탬플릿화
 - 대소문자 변경: Command + Shift + U
 - 동일한 문자 다중 선택: Control + G
-- [Intellij 확장자 안열릴 때](%5Bintellij%5D-확장자-안열릴-때)
+- [Intellij 확장자 안열릴 때](%5Bintellij%5D-확장자-안열릴-때.md)
 - TypeScript의 types 추적안될 때
   - WebStorm > Preferences > Languages & Frameworks > TypeScript > [x] TypeScript Language Service
 - 2019.3 버전부터 Nullish Coalescing operator 사용가능
@@ -45,8 +45,8 @@
 - `npm ci`: `npm install` 과 비슷
 - PR Template: 저장소에 `pull_request_template.md` 파일 포함
 - 정적 페이지 개발(SPA x) : Webpack 사용. entry에 각 페이지의 js를 정의.
-- [WebDriver screenshot](WebDriver-screenshot)
-- [package-lock.json](package-lock.json)
+- [WebDriver screenshot](WebDriver-screenshot.md)
+- [package-lock.json](package-lock.json.md)
 - href = Hypertext Reference
 - eslint-disable-line
 - Pull Request에서 develop과 conflict 발생시 feature 브랜치와 머지를 하지 않는 것이 좋음 : feature에 머지시 conflict의 정상동작을 보장 할 수 없음.
