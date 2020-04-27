@@ -20,36 +20,36 @@
 
 #### ECMAScript
 
-- [Concept](Concept)
-- [Better](Better)
-- [New Features](New+Features)
-- [For library](For+library)
-- [New-built-in-method](New-built-in-method)
-- [Iterator&Generator](Iterator&Generator)
-  - [Coroutine](Coroutine)
-  - [Lazy Execution](Lazy-Execution)
-  - [Yield 분석](Yield-분석)
-- [Decorators](Decorators)
-- [this](this)
-- [async await 정리](async-await-정리)
-- [Promise 정리](Promise-정리)
+- [Concept](Concept.md)
+- [Better](Better.md)
+- [New Features](New+Features.md)
+- [For library](For+library.md)
+- [New-built-in-method](New-built-in-method.md)
+- [Iterator&Generator](Iterator&Generator.md)
+  - [Coroutine](Coroutine.md)
+  - [Lazy Execution](Lazy-Execution.md)
+  - [Yield 분석](Yield-분석.md)
+- [Decorators](Decorators.md)
+- [this](this.md)
+- [async await 정리](async-await-정리.md)
+- [Promise 정리](Promise-정리.md)
 - [7 Tricks with Resting and Spreading JavaScript Objects](https://blog.bitsrc.io/6-tricks-with-resting-and-spreading-javascript-objects-68d585bdc83)
 
 #### DOM
-- [Event](Event)
-  - [자식 레이어 팝업](자식-레이어-팝업)
-  - [리스너와 핸들러](리스너와-핸들러)
+- [Event](Event.md)
+  - [자식 레이어 팝업](자식-레이어-팝업.md)
+  - [리스너와 핸들러](리스너와-핸들러.md)
 - getComputedStyle : 계산된 스타일 사용
 
 #### 테스트
-- [BDD & TDD](BDD-&-TDD)
-- [테스트 종류](%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%A2%85%EB%A5%98)
-- [테스트 작성](테스트-작성)
+- [BDD & TDD](BDD-&-TDD.md)
+- [테스트 종류](테스트-종류.md)
+- [테스트 작성](테스트-작성.md)
 
 #### 기타
-- [정규식](정규식)
-- [코딩팁](코딩팁)
-- [컴포넌트](%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8)
+- [정규식](정규식.md)
+- [코딩팁](코딩팁.md)
+- [컴포넌트](컴포넌트.md)
   - 컴포넌트화는 뷰와 로직의 추상화이다
   - 컴포넌트 설계시 함수화와 동일한 방식으로 설계할 수 있다.
 ```js
