@@ -6,9 +6,9 @@ export default (targetElement, state) => {
     .from(newFilter.querySelectorAll('li a'))
     .forEach(a => {
       if (a.textContent === currentFilter) {
-        a.classList.add('selected')
+        a.style.fontWeight = 'bold';
       } else {
-        a.classList.remove('selected')
+        a.style.fontWeight = 'normal';
       }
     });
 
