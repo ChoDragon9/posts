@@ -2,7 +2,7 @@ import {clone, from} from '../helper.js';
 
 const COMPONENT_KEY = '[data-component]';
 
-const registry = {};
+const registry = new Map();
 
 const renderWrapper = component => {
   return (targetElement, state) => {
@@ -12,9 +12,9 @@ const renderWrapper = component => {
     from(childComponents)
       .forEach(child => {
         const componentName = child.dataset.component;
-        const componentFn = registry[componentName];
 
-        if (componentFn) {
+        if (registry.has(componentName)) {
+          const componentFn = registry.get(componentName);
           child.replaceWith(componentFn(child, state));
         }
       });
@@ -24,7 +24,7 @@ const renderWrapper = component => {
 };
 
 const add = (componentName, componentFn) => {
-  registry[componentName] = renderWrapper(componentFn);
+  registry.set(componentName, renderWrapper(componentFn));
 };
 
 const renderRoot = (root, state) => {
