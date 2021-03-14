@@ -1,9 +1,11 @@
+const COMPONENT_KEY = '[data-component]';
+
 const registry = {};
 
 const renderWrapper = component => {
   return (targetElement, state) => {
     const element = component(targetElement, state);
-    const childComponents = element.querySelectorAll('[data-component]');
+    const childComponents = element.querySelectorAll(COMPONENT_KEY);
 
     Array
       .from(childComponents)
