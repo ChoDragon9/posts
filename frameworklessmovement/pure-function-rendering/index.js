@@ -1,5 +1,5 @@
 import getTodos from './getTodos.js';
-import createApp from './createApp.js'
+import createApp from './core/createApp.js'
 
 const state = {
   todos: getTodos(),
