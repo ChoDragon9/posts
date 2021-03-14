@@ -1,4 +1,4 @@
-import fetchMockTodos from './fetchMockTodos.js';
+import fetchMockTodos from './mockup/fetchMockTodos.js';
 import createApp from './core/createApp.js'
 
 const state = {
