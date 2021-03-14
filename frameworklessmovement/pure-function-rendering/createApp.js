@@ -7,6 +7,7 @@ registry.add('todos', todosView);
 registry.add('counter', counterView);
 registry.add('filters', filtersView);
 
-export default (targetElement, state) => {
-  return registry.renderRoot(targetElement, state);
+export default (rootElement, state) => {
+  const newRootElement = registry.renderRoot(rootElement, state);
+  rootElement.replaceWith(newRootElement);
 }

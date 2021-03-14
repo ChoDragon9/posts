@@ -1,5 +1,5 @@
 import getTodos from './getTodos.js';
-import view from './view.js'
+import createApp from './createApp.js'
 
 const state = {
   todos: getTodos(),
@@ -9,8 +9,7 @@ const state = {
 const render = () => {
   window.requestAnimationFrame(() => {
     const main = document.querySelector('.todoapp');
-    const newMain = view(main, state);
-    main.replaceWith(newMain);
+    createApp(main, state);
   });
 };
 
