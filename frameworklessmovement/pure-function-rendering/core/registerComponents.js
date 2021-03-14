@@ -1,10 +1,10 @@
 import registry from './registry.js';
-import todosView from '../components/todosView.js';
-import counterView from '../components/counterView.js';
-import filtersView from '../components/filtersView.js';
+import todos from '../components/todos.js';
+import counter from '../components/counter.js';
+import filters from '../components/filters.js';
 
 export default () => {
-  registry.add('todos', todosView);
-  registry.add('counter', counterView);
-  registry.add('filters', filtersView);
+  registry.add('todos', todos);
+  registry.add('counter', counter);
+  registry.add('filters', filters);
 };

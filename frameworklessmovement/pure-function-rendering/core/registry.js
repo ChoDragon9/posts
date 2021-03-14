@@ -1,3 +1,5 @@
+import {clone} from '../helper.js';
+
 const COMPONENT_KEY = '[data-component]';
 
 const registry = {};
@@ -27,7 +29,6 @@ const add = (componentName, componentFn) => {
 };
 
 const renderRoot = (root, state) => {
-  const clone = root => root.cloneNode(true);
   return renderWrapper(clone)(root, state)
 };
 
