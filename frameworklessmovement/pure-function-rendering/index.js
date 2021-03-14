@@ -1,19 +1,19 @@
-import getTodos from './getTodos.js';
+import fetchMockTodos from './fetchMockTodos.js';
 import createApp from './core/createApp.js'
 
 const state = {
-  todos: getTodos(),
+  todos: [],
   currentFilter: 'All'
 };
+const main = document.querySelector('#main');
 
 const render = () => {
   window.requestAnimationFrame(() => {
-    const main = document.querySelector('.todoapp');
     createApp(main, state);
   });
 };
 
 window.setInterval(() => {
-  state.todos = getTodos();
+  state.todos = fetchMockTodos();
   render();
 }, 1000);

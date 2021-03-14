@@ -5,29 +5,21 @@
   <title>Document</title>
 </head>
 <body>
-<section class="todoapp">
-  <ul class="todo-list" data-component="todos"></ul>
-  <footer class="footer">
-    <span
-      class="todo-count"
-      data-component="counter"
-    >1 Item Left</span>
-    <ul
-      class="filters"
-      data-component="filters"
-    >
-      <li>
-        <a href="#/">All</a>
-      </li>
-      <li>
-        <a href="#/active">Active</a>
-      </li>
-      <li>
-        <a href="#/completed">Completed</a>
-      </li>
-    </ul>
-  </footer>
-</section>
+<div id="main">
+  <ul data-component="todos"></ul>
+  <span data-component="counter">0 Item Left</span>
+  <ul data-component="filters">
+    <li>
+      <a href="#">All</a>
+    </li>
+    <li>
+      <a href="#">Active</a>
+    </li>
+    <li>
+      <a href="#">Completed</a>
+    </li>
+  </ul>
+</div>
 <script type="module" src="index.js"></script>
 </body>
 </html>
