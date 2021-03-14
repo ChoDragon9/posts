@@ -1,3 +1,5 @@
+import {from} from '../../helper.js';
+
 const isDiffAttrLength = (node1, node2) => {
   const n1Attrs = node1.attributes;
   const n2Attrs = node2.attributes;
@@ -6,8 +8,7 @@ const isDiffAttrLength = (node1, node2) => {
 };
 
 const isDiffAttrValue = (node1, node2) => {
-  return Array
-    .from(node1.attributes)
+  return from(node1.attributes)
     .find(attr => {
       const {name} = attr;
       const attr1 = node1.getAttribute(name);

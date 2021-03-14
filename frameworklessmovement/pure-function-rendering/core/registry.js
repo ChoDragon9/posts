@@ -1,4 +1,4 @@
-import {clone} from '../helper.js';
+import {clone, from} from '../helper.js';
 
 const COMPONENT_KEY = '[data-component]';
 
@@ -9,8 +9,7 @@ const renderWrapper = component => {
     const element = component(targetElement, state);
     const childComponents = element.querySelectorAll(COMPONENT_KEY);
 
-    Array
-      .from(childComponents)
+    from(childComponents)
       .forEach(child => {
         const componentName = child.dataset.component;
         const componentFn = registry[componentName];

@@ -1,4 +1,5 @@
 import isNodeChanged from './isNodeChanged.js';
+import {from} from '../../helper.js';
 
 const applyDiff = (parentNode, realNode, virtualNode) => {
   if (realNode && !virtualNode) {
@@ -16,12 +17,11 @@ const applyDiff = (parentNode, realNode, virtualNode) => {
     return
   }
 
-  const realChildren = Array.from(realNode.children);
-  const virtualChildren = Array.from(virtualNode.children);
+  const realChildren = from(realNode.children);
+  const virtualChildren = from(virtualNode.children);
   const length = Math.max(realChildren.length, virtualChildren.length);
 
-  Array
-    .from({length})
+  from({length})
     .map((v, i) => [
       realChildren[i],
       virtualChildren[i]
