@@ -4,9 +4,9 @@ const COMPONENT_KEY = '[data-component]';
 
 const registry = new Map();
 
-const renderWrapper = component => {
+const renderWrapper = componentFn => {
   return (targetElement, state) => {
-    const element = component(targetElement, state);
+    const element = componentFn(targetElement, state);
     const childComponents = element.querySelectorAll(COMPONENT_KEY);
 
     from(childComponents)
@@ -14,8 +14,8 @@ const renderWrapper = component => {
         const componentName = child.dataset.component;
 
         if (registry.has(componentName)) {
-          const componentFn = registry.get(componentName);
-          child.replaceWith(componentFn(child, state));
+          const childComponentFn = registry.get(componentName);
+          child.replaceWith(childComponentFn(child, state));
         }
       });
 
