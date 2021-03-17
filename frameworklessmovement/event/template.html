@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<ul></ul>
+<template id="todo-item">
+  <li>
+    <span></span>
+    <button>Delete</button>
+  </li>
+</template>
+
+<script>
+  const todoItemTemplate = document.querySelector('#todo-item');
+
+  const ul = document.querySelector('ul');
+  const state = ['Apple', 'Orange', 'Banana'];
+
+  const li = document.createElement('li');
+  const span = document.createElement('span');
+  const button = document.createElement('button');
+  li.appendChild(span);
+  li.appendChild(button);
+  button.textContent = 'Delete';
+
+  setTimeout(() => {
+    state.forEach(fruit => {
+      const cloneTodoItem = li.cloneNode(true);
+      cloneTodoItem.querySelector('span').textContent = fruit;
+      ul.appendChild(cloneTodoItem);
+    })
+  }, 1000);
+</script>
+</body>
+</html>

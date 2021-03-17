@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<div>
+  <button>Button</button>
+</div>
+
+<script>
+  const button = document.querySelector('button');
+  const div = document.querySelector('div');
+
+  div.addEventListener('click', () => {
+    console.log('[Capture] Div');
+  }, true);
+
+  div.addEventListener('click', () => {
+    console.log('[Bubble] Div');
+  }, false);
+
+  button.addEventListener('click', () => {
+    console.log('[Capture] Button');
+  }, true);
+
+  button.addEventListener('click', () => {
+    console.log('[Bubble] Button');
+  }, false);
+</script>
+</body>
+</html>
