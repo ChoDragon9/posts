@@ -1,10 +1,14 @@
 export class MyItem extends HTMLElement {
+  static template(txt) {
+    return `
+      <li>
+        <a>${txt}</a>
+      </li>
+    `
+  }
   connectedCallback() {
     window.requestAnimationFrame(() => {
-      const itemTemplate = document.querySelector('#item');
-      const clonedItem = itemTemplate.content.cloneNode(true);
-      clonedItem.querySelector('a').textContent = Date.now();
-      this.appendChild(clonedItem);
+      this.innerHTML = MyItem.template(Date.now());
     })
   }
 }

@@ -1,8 +1,13 @@
 export class MyFooter extends HTMLElement {
+  static template () {
+    return `
+      <footer>Copyright (c) All right reserved.</footer>
+    `
+  }
+
   connectedCallback() {
     window.requestAnimationFrame(() => {
-      const footerTemplate = document.querySelector('#footer');
-      this.appendChild(footerTemplate.content.cloneNode(true));
+      this.innerHTML = MyFooter.template()
     })
   }
 }
