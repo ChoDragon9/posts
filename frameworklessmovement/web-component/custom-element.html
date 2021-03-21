@@ -9,23 +9,46 @@
 </head>
 <body>
 
-<hello-world />
+<hello-world onclick="changeColor()"></hello-world>
 
 <script>
   class HelloWorld extends HTMLElement {
+    static get observedAttributes () {
+      return ['color']
+    }
+    get color () {
+      return this.getAttribute('color') || 'black'
+    }
+    set color (value) {
+      this.setAttribute('color', value)
+    }
+    attributeChangedCallback (name, oldValue, newValue) {
+      if (!this.div) {
+        return
+      }
+
+      if (name === 'color') {
+        this.div.style.color = newValue;
+      }
+    }
     connectedCallback() {
       window.requestAnimationFrame(() => {
-        this.innerHTML = '<div>Hello World</div>'
+        this.div = document.createElement('div');
+        this.div.textContent = 'Hello World';
+        this.div.style.color = this.color;
+        this.appendChild(this.div);
       })
     }
   }
 
-window.onload = () => {
-  setTimeout(() => {
-    window.customElements
-      .define('hello-world', HelloWorld);
-  }, 1000);
-}
+  window.customElements
+    .define('hello-world', HelloWorld);
+
+  const changeColor = () => {
+    document
+      .querySelector('hello-world')
+      .setAttribute('color', 'red')
+  };
 </script>
 </body>
 </html>
