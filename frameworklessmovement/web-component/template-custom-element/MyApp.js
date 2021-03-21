@@ -1,6 +1,11 @@
 export class MyApp extends HTMLElement {
   static template() {
     return `
+      <style>
+        * {
+          font-weight: bold;
+        }
+      </style>
       <ul>
         <my-item></my-item>
         <my-item></my-item>
@@ -11,7 +16,8 @@ export class MyApp extends HTMLElement {
   }
   connectedCallback() {
     window.requestAnimationFrame(() => {
-      this.innerHTML = MyApp.template();
+      const shadow = this.attachShadow({mode: 'closed'});
+      shadow.innerHTML = MyApp.template();
     })
   }
 }

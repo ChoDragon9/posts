@@ -8,7 +8,8 @@ export class MyItem extends HTMLElement {
   }
   connectedCallback() {
     window.requestAnimationFrame(() => {
-      this.innerHTML = MyItem.template(Date.now());
+      const shadow = this.attachShadow({mode: 'closed'});
+      shadow.innerHTML = MyItem.template(Date.now());
     })
   }
 }
