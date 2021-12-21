@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    p {
+      margin: 0;
+
+      background-color: #f00;
+
+      /* 폰트 매트릭스 */
+      --font: Catamaran;
+      --fm-capitalHeight: 0.68;
+      --fm-descender: 0.6;
+      --fm-ascender: 1.1;
+      --fm-linegap: 0;
+
+      /* 원하는 대문자 높이 */
+      --capital-height: 30;
+
+      /* font-family를 적용합니다 */
+      font-family: var(--font);
+      /* 원하는 대문자 높이를 맞추기 위한 font-size값 계산 */
+      --computedFontSize: calc(var(--capital-height) / var(--fm-capitalHeight));
+      font-size: calc(var(--computedFontSize) * 1px);
+
+      --lineheightNormal: calc(var(--fm-ascender) + var(--fm-descender) + var(--fm-linegap));
+      --contentArea: calc(var(--lineheightNormal) * var(--computedFontSize));
+      --distanceBottom: calc(var(--fm-descender));
+      --distanceTop: calc(var(--fm-ascender) - var(--fm-capitalHeight));
+      --valign: calc((var(--distanceBottom) - var(--distanceTop)) * var(--computedFontSize));
+      --line-height: 1;
+      line-height: calc(((var(--line-height) * var(--capital-height)) - var(--valign)) * 1px);
+    }
+    span {
+      vertical-align: calc(var(--valign) * -1px);
+    }
+  </style>
+</head>
+<body>
+  <p>
+    <span>Hello World</span>
+  </p>
+
+  <script>
+    const p = document.querySelector('p');
+    const pStyles = window.getComputedStyle(p);
+    const span = document.querySelector('span');
+    const spanStyles = window.getComputedStyle(span);
+
+    console.log(
+      pStyles.fontSize, pStyles.lineHeight,
+      spanStyles.verticalAlign
+    );
+  </script>
+</body>
+</html>
