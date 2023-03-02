@@ -9,6 +9,6 @@
   },
   "devDependencies": {
     "expect": "^23.6.0",
-    "mocha": "^5.2.0"
+    "mocha": "^10.2.0"
   }
 }
