@@ -1,1 +1,0 @@
-https://www.vuemastery.com/courses/advanced-components/evan-you-on-proxies/
