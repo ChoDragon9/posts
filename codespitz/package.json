@@ -8,7 +8,7 @@
     "test": "mocha ./json-parser-fp3/spec/**/*.spec.js ./json-parser-fp3/spec/*.spec.js"
   },
   "devDependencies": {
-    "expect": "^23.6.0",
+    "expect": "^29.7.0",
     "mocha": "^5.2.0"
   }
 }
